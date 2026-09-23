@@ -86,6 +86,28 @@ TOU_SCHEDULES: dict[str, dict] = {
             "LO": {"peak": [], "standard": []},
         },
     },
+    # City of Johannesburg (City Power) LPU TOU clock. One clock for both
+    # seasons; winter (High Demand) = Jun/Jul/Aug. Unchanged between the 2025/26
+    # booklet (ITEM_03C_ANNEXURE item 5.4.7) and the 2026/27 approved schedule
+    # (page 8), so both rate-year blocks point here. The booklet's weekday
+    # off-peak "12h00-06h00" is a typo for 22h00-06h00 (the gap left by the
+    # peak and standard bands). Public holidays are billed as Saturdays by City
+    # Power; the engine does not apply holiday overrides (see get_tou_period).
+    "coj-2025": {
+        "hd_months": [6, 7, 8],
+        "weekday": {
+            "HI": {"peak": [[7, 10], [18, 20]], "standard": [[6, 7], [10, 18], [20, 22]]},
+            "LO": {"peak": [[7, 10], [18, 20]], "standard": [[6, 7], [10, 18], [20, 22]]},
+        },
+        "saturday": {
+            "HI": {"peak": [], "standard": [[7, 12], [18, 20]]},
+            "LO": {"peak": [], "standard": [[7, 12], [18, 20]]},
+        },
+        "sunday": {
+            "HI": {"peak": [], "standard": [[17, 19]]},
+            "LO": {"peak": [], "standard": [[17, 19]]},
+        },
+    },
 }
 
 

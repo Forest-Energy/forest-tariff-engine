@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.26.0] - 2026-09-23
+
+### Fixed
+- tariffs: City of Johannesburg 2026/27 rates corrected to the approved City Power schedule ("Schedule of Approved Tariffs for FY26/27", dated 01 July 2026). v1.22.0 loaded a projection (2025/26 x 8.63%, the City's headline electricity figure); the approved LPU rates are 2025/26 x 9.01% on every line, so all 2026/27 CoJ charges were understated by about 0.35%. Energy still carries the 6 c/kWh Network Surcharge. Examples (excl VAT): Industrial TOU LV/MV/HV HD peak 770.09 -> 772.24 c/kWh, LD off-peak 192.22 -> 192.35; TOU LV demand R459.67 -> R461.28/kVA, TOU MV R429.61 -> R431.11; TOU LV fixed R4 613.51 -> R4 629.64/m, TOU MV R12 664.17 -> R12 708.47/m; Large Consumer Demand LV winter/summer 339.14/290.49 -> 339.79/290.96 c/kWh, fixed R3 847.21 -> R3 860.67/m, demand R459.61 -> R461.22; Large Consumer Demand MV 320.27/271.60 -> 320.85/272.01 c/kWh, fixed R11 691.99 -> R11 732.89/m, demand R429.61 -> R431.11.
+- tariffs: CoJ 2026/27 export (Business & LPU Embedded Generator, <=1 MW) 97.82 -> 103.26 c/kWh on all five tariffs. It rose 14.67%, not the 8.63% assumed.
+- tariffs: all CoJ Industrial TOU tariffs (LV/MV/HV, both 2025/26 and 2026/27) now use the City Power TOU clock (new `coj-2025` schedule) instead of the Eskom clock. City Power uses one clock all year: weekday peak 07-10 and 18-20, standard 06-07, 10-18 and 20-22; Saturday standard 07-12 and 18-20; Sunday standard 17-19. Same clock in the 2025/26 booklet (item 5.4.7) and the 2026/27 schedule (page 8). The Eskom clock put winter 06:00-07:00 and 17:00-18:00 in peak and missed 08:00-10:00, so CoJ TOU savings (especially BESS peak shaving) were misallocated in both years.
+
+### Notes
+- The approved schedule's "Industrial LV" and "Industrial MV" are the engine's `CoJ Large Consumer Demand LV/MV` (same structure, every rate equals 2025/26 x 9.01%). City Power renamed them; the established names are kept so downstream lookups stay continuous. "Industrial LV/MV (TOU)" map to `CoJ Industrial TOU LV/MV`.
+- `CoJ Industrial TOU HV` is not listed in the 2026/27 schedule. It is set to 2025/26 x 9.01% (fixed R86 763.80/m, demand R400.93/kVA) with the same energy rates as LV/MV, as in 2025/26. Verify against a City Power HV bill or quote.
+- Not modelled: reactive energy 46.25 c/kVArh, the 70 kVA minimum demand rule, the 2% Business/LPU surcharge (listed in the 2025/26 booklet, not in the 2026/27 schedule), and public holidays billed as Saturdays.
+
 ## [1.25.0] - 2026-08-19
 
 ### Added

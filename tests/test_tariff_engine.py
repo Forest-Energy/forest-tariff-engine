@@ -228,6 +228,48 @@ class TestTOUSchedules:
         rates = _resolve_tariff_rates("Stellenbosch TOU LV", data)
         assert rates.tou_schedule == "stellenbosch-2025"
 
+    # City Power clock: same bands in both seasons, differs from Eskom.
+    def test_coj_weekday(self):
+        S = "coj-2025"
+        for m, season in [(7, "HI"), (3, "LO")]:
+            assert get_tou_period(m, 6, 1, False, S) == (season, 2)   # 06:00 standard
+            assert get_tou_period(m, 7, 1, False, S) == (season, 1)   # peak 07-10
+            assert get_tou_period(m, 9, 1, False, S) == (season, 1)
+            assert get_tou_period(m, 10, 1, False, S) == (season, 2)
+            assert get_tou_period(m, 18, 1, False, S) == (season, 1)  # peak 18-20
+            assert get_tou_period(m, 20, 1, False, S) == (season, 2)
+            assert get_tou_period(m, 22, 1, False, S) == (season, 3)  # off-peak 22-06
+        # Winter 06:00 is peak on Eskom, standard on City Power.
+        assert get_tou_period(7, 6, 1, False, "eskom") == ("HI", 1)
+
+    def test_coj_weekend(self):
+        S = "coj-2025"
+        assert get_tou_period(7, 7, 6, False, S) == ("HI", 2)   # Sat standard 07-12
+        assert get_tou_period(7, 12, 6, False, S) == ("HI", 3)
+        assert get_tou_period(3, 18, 6, False, S) == ("LO", 2)  # Sat standard 18-20
+        assert get_tou_period(3, 17, 7, False, S) == ("LO", 2)  # Sun standard 17-19
+        assert get_tou_period(3, 19, 7, False, S) == ("LO", 3)
+
+    def test_coj_tou_tariffs_carry_schedule_both_years(self):
+        import datetime as dt
+        from tariff_engine.rates import _load_tariff_json_for_date, _resolve_tariff_rates
+        for name in ("CoJ Industrial TOU LV", "CoJ Industrial TOU MV", "CoJ Industrial TOU HV"):
+            assert get_tariff_rates(name).tou_schedule == "coj-2025"
+            data = _load_tariff_json_for_date(name, dt.date(2026, 3, 1))
+            assert _resolve_tariff_rates(name, data).tou_schedule == "coj-2025"
+
+    def test_coj_2026_approved_rates(self):
+        # City Power approved schedule FY26/27, energy incl. 6 c/kWh surcharge.
+        lv = get_tariff_rates("CoJ Industrial TOU LV")
+        assert lv.hd_peak == pytest.approx(7.7224)
+        assert lv.ld_off_peak == pytest.approx(1.9235)
+        assert lv.export_hd_peak == pytest.approx(1.0326)
+        assert lv.demand_charge_kva == pytest.approx(461.28)
+        assert lv.service_charge_pa == pytest.approx(4629.64 * 12)
+        flat_lv = get_tariff_rates("CoJ Large Consumer Demand LV")
+        assert flat_lv.hd_peak == pytest.approx(3.3979)
+        assert flat_lv.ld_off_peak == pytest.approx(2.9096)
+
 
 # ============================================================================
 # Section 2 - build_hourly_tou
