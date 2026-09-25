@@ -216,8 +216,9 @@ class TestTOUSchedules:
         assert get_tou_period(3, 12, 1, False, "stellenbosch-2025")[1] != 1
 
     def test_tariff_carries_schedule(self):
-        # From 2026/27 Stellenbosch follows the Eskom TOU clock.
-        assert get_tariff_rates("Stellenbosch TOU LV").tou_schedule == "eskom"
+        # The final 2026/27 Stellenbosch schedule keeps the Stellenbosch clock.
+        for name in ("Stellenbosch TOU LV", "Stellenbosch TOU MV", "Stellenbosch Large Power LV >80A (IND1)"):
+            assert get_tariff_rates(name).tou_schedule == "stellenbosch-2025"
         assert get_tariff_rates("Eskom Miniflex").tou_schedule == "eskom"
 
     def test_stellenbosch_historical_schedule(self):

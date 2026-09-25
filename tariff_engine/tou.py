@@ -70,7 +70,9 @@ TOU_SCHEDULES: dict[str, dict] = {
     # all day; Saturday bands are season-independent. Schedules are year-scoped
     # because a municipality may revise its clock: never edit an existing entry,
     # add a new one (e.g. "stellenbosch-2026") and point the new rate-year version
-    # block at it, so historical date lookups stay accurate.
+    # block at it, so historical date lookups stay accurate. The clock is
+    # unchanged in the final 2026/27 schedule (WC024 Appendix 3, May 2026, p10),
+    # so the 2026/27 block points here too.
     "stellenbosch-2025": {
         "hd_months": [6, 7, 8],
         "weekday": {

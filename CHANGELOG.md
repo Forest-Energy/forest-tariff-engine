@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.28.0] - 2026-09-25
+
+### Fixed
+- tariffs: Stellenbosch 2026/27 tariffs (`Stellenbosch TOU LV`, `Stellenbosch TOU MV`, `Stellenbosch Large Power LV >80A (IND1)`) back on the Stellenbosch TOU clock (`stellenbosch-2025`), reversing the v1.21.0 move to the Eskom clock. v1.21.0 followed the proposed electricity annexure (p9, Eskom hours). The confirmed final schedule, WC024 Appendix 3 "Final Tariff Proposals 2026-2027" (May 2026) section 13 p10, keeps the 2025/26 Stellenbosch clock band-for-band: winter weekday peak 06-09 and 17-19, standard 09-17 and 19-22; summer weekday peak 07-10 and 18-20, standard 06-07, 10-18 and 20-22; Saturday standard 07-12 and 18-20 all year; Sunday off-peak all day. 2025/26 is unchanged.
+
+### Verified
+- tariffs: all Stellenbosch 2026/27 rates already match the final appendix (TOU1, TOU2, IND1 and the shared export rates), so no rate changes. Note: the appendix's TOU 2.1 (renewable) table shows summer standard 192.50 and winter off-peak 143.68 c/kWh where TOU2 shows 182.00 and 143.44; the engine keeps the TOU2 values. Known inconsistency left as is: the 2025/26 IND1 fixed charge includes the IND 1.1 reading cost (R3 381.54 + R146.01 = R3 527.55), the 2026/27 IND1 fixed charge does not (R3 381.53).
+
 ## [1.27.0] - 2026-09-25
 
 ### Fixed
