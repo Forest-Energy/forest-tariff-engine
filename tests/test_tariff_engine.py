@@ -258,6 +258,32 @@ class TestTOUSchedules:
             data = _load_tariff_json_for_date(name, dt.date(2026, 3, 1))
             assert _resolve_tariff_rates(name, data).tou_schedule == "coj-2025"
 
+    # City of Cape Town: Eskom's Low Demand clock used in both seasons.
+    def test_coct_same_clock_both_seasons(self):
+        S = "coct-2025"
+        for wd in (1, 6, 7):
+            for h in range(24):
+                assert get_tou_period(7, h, wd, False, S)[1] == get_tou_period(3, h, wd, False, S)[1]
+                assert get_tou_period(3, h, wd, False, S)[1] == get_tou_period(3, h, wd, False, "eskom")[1]
+
+    def test_coct_winter_differs_from_eskom(self):
+        S = "coct-2025"
+        assert get_tou_period(7, 6, 1, False, S) == ("HI", 2)    # Eskom winter: peak
+        assert get_tou_period(7, 8, 1, False, S) == ("HI", 1)    # Eskom winter: standard
+        assert get_tou_period(7, 17, 1, False, S) == ("HI", 2)   # Eskom winter: peak
+        assert get_tou_period(7, 20, 1, False, S) == ("HI", 1)   # Eskom winter: standard
+        assert get_tou_period(7, 17, 7, False, S) == ("HI", 3)   # Sunday 17:00 off-peak
+        assert get_tou_period(7, 19, 6, False, S) == ("HI", 2)   # Saturday 19:00 standard
+
+    def test_coct_tou_tariffs_carry_schedule_both_years(self):
+        import datetime as dt
+        from tariff_engine.rates import _load_tariff_json_for_date, _resolve_tariff_rates
+        for name in ("CoCT LV TOU", "CoCT MV TOU", "CoCT HV TOU"):
+            assert get_tariff_rates(name).tou_schedule == "coct-2025"
+            data = _load_tariff_json_for_date(name, dt.date(2026, 3, 1))
+            assert _resolve_tariff_rates(name, data).tou_schedule == "coct-2025"
+        assert get_tariff_rates("CoCT Small Power Users 1").tou_schedule == "eskom"
+
     def test_coj_2026_approved_rates(self):
         # City Power approved schedule FY26/27, energy incl. 6 c/kWh surcharge.
         lv = get_tariff_rates("CoJ Industrial TOU LV")

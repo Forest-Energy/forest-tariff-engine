@@ -108,6 +108,27 @@ TOU_SCHEDULES: dict[str, dict] = {
             "LO": {"peak": [], "standard": [[17, 19]]},
         },
     },
+    # City of Cape Town TOU clock from the 2025/26 rate year ("Changes for
+    # 2025/26!" in that year's Consumptive Tariffs book). One clock for both
+    # seasons, equal to Eskom's Low Demand clock; only the prices change in
+    # winter (Jun/Jul/Aug). Unchanged in the 2026/27 Consumptive Tariffs book
+    # (Annexure 6, p3) and the July 2026 "Understanding Residential Electricity
+    # Tariffs" guideline (p4), so both rate-year blocks point here.
+    "coct-2025": {
+        "hd_months": [6, 7, 8],
+        "weekday": {
+            "HI": {"peak": [[7, 9], [18, 21]], "standard": [[6, 7], [9, 18], [21, 22]]},
+            "LO": {"peak": [[7, 9], [18, 21]], "standard": [[6, 7], [9, 18], [21, 22]]},
+        },
+        "saturday": {
+            "HI": {"peak": [], "standard": [[7, 12], [18, 20]]},
+            "LO": {"peak": [], "standard": [[7, 12], [18, 20]]},
+        },
+        "sunday": {
+            "HI": {"peak": [], "standard": [[18, 20]]},
+            "LO": {"peak": [], "standard": [[18, 20]]},
+        },
+    },
 }
 
 

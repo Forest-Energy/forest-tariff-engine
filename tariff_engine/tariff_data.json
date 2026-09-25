@@ -2975,7 +2975,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             },
             "CoCT MV TOU": {
               "type": "municipal_tou",
@@ -3022,7 +3023,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             },
             "CoCT HV TOU": {
               "type": "municipal_tou",
@@ -3069,7 +3071,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             }
           }
         },
@@ -3155,7 +3158,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             },
             "CoCT MV TOU": {
               "type": "municipal_tou",
@@ -3202,7 +3206,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             },
             "CoCT HV TOU": {
               "type": "municipal_tou",
@@ -3249,7 +3254,8 @@
                   }
                 }
               },
-              "default_sseg": "SSEG Tariff 1 + Incentive"
+              "default_sseg": "SSEG Tariff 1 + Incentive",
+              "tou_schedule": "coct-2025"
             }
           }
         }

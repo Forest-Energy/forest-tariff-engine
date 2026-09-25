@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.27.0] - 2026-09-25
+
+### Fixed
+- tariffs: City of Cape Town TOU tariffs (`CoCT LV TOU`, `CoCT MV TOU`, `CoCT HV TOU`, both 2025/26 and 2026/27) now use the CoCT TOU clock (new `coct-2025` schedule) instead of the Eskom clock. From 2025/26 CoCT uses one clock all year, equal to Eskom's Low Demand clock: weekday peak 07-09 and 18-21, standard 06-07, 09-18 and 21-22; Saturday standard 07-12 and 18-20; Sunday standard 18-20. Only the prices change in winter (Jun-Aug). Sources: Electricity Consumptive Tariffs 2025/26 p4 ("Changes for 2025/26!"), Annexure 6 2026/27 p3, and the July 2026 "Understanding Residential Electricity Tariffs" guideline p4. Summer results are unchanged. In winter the Eskom clock wrongly put 06:00-07:00 and 17:00-18:00 in peak and 08:00-09:00 and 20:00-21:00 in standard, and shifted the weekend standard windows an hour early, so CoCT winter savings (especially BESS peak shaving) were misallocated. Rates unchanged. `CoCT Small Power Users 1` is flat and stays on the default schedule.
+
 ## [1.26.0] - 2026-09-23
 
 ### Fixed
