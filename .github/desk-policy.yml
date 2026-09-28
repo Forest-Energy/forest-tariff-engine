@@ -1,0 +1,9 @@
+# Copy to .github/desk-policy.yml in Forest-Energy/forest-tariff-engine.
+# Every tariff and calculation change flows into live client financials, so all engine code
+# and data is high risk. The registry also marks this tool as never auto-merge.
+highRiskPaths:
+  - tariff_engine/**
+  - scripts/**
+  - pyproject.toml
+maxChangedLines: 200
+maxFiles: 10
