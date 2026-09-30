@@ -66,7 +66,7 @@ jobs:
           claude_args: >-
             --model claude-opus-5-5
             --max-turns 120
-            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(git:*),Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(npm:*),Bash(npx:*),Bash(node:*),Bash(python:*),Bash(python3:*),Bash(py:*),Bash(pip:*),Bash(pytest:*),Bash(ls:*),Bash(cat:*)"
+            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(git:*),Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(gh pr edit:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(npm:*),Bash(npx:*),Bash(node:*),Bash(python:*),Bash(python3:*),Bash(py:*),Bash(pip:*),Bash(pytest:*),Bash(ls:*),Bash(cat:*)"
           prompt: |
             You are the AI developer for Forest Energy, a South African solar PV and BESS EPC company.
             Build the change described in issue #${{ github.event.issue.number }} of ${{ github.repository }}.
@@ -92,6 +92,8 @@ jobs:
 
             5. Commit with clear messages and push the branch. If no PR exists for it yet, open one into the base branch
                with `gh pr create`, following .github/pull_request_template.md, and include "Closes #${{ github.event.issue.number }}".
+               If the PR already exists (a rework after "Change requested by an approver"), update its description with
+               `gh pr edit` so it matches the new diff and says which change request it answers.
                For UI changes, describe exactly what changed on screen.
 
             6. If the spec is ambiguous in a way that changes what you would build, do not guess. Post one comment on the
