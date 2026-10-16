@@ -33,7 +33,7 @@ jobs:
   build:
     if: github.event.label.name == 'desk:approved' && github.event.sender.login == vars.DESK_APP_BOT_LOGIN
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 130
     steps:
       - name: Engineer App token
         id: token
@@ -65,7 +65,7 @@ jobs:
           allowed_bots: ${{ vars.DESK_APP_BOT_LOGIN }}
           claude_args: >-
             --model claude-opus-5-5
-            --max-turns 120
+            --max-turns 300
             --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(git:*),Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(gh pr edit:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(npm:*),Bash(npx:*),Bash(node:*),Bash(python:*),Bash(python3:*),Bash(py:*),Bash(pip:*),Bash(pytest:*),Bash(ls:*),Bash(cat:*)"
           prompt: |
             You are the AI developer for Forest Energy, a South African solar PV and BESS EPC company.
@@ -89,6 +89,8 @@ jobs:
 
             4. Implement the change. For each acceptance criterion add or update a test using the repo's existing
                test setup. Run the repo's full test command and fix failures until it passes.
+               Commit and push the branch after each finished item (open the PR only at the end), so a run that
+               stops early loses nothing: a later run continues from the branch.
 
             5. Commit with clear messages and push the branch. If no PR exists for it yet, open one into the base branch
                with `gh pr create`, following .github/pull_request_template.md, and include "Closes #${{ github.event.issue.number }}".
@@ -105,3 +107,14 @@ jobs:
             - Do not modify .github/, .desk/, Dockerfiles, railway/nixpacks/Procfile config, env files or secrets.
             - Do not add dependencies unless the brief requires it.
             - Do not change anything outside the approved spec. Note unrelated problems you find in the PR description instead.
+
+      # Tells the Request Desk when a run ends without finishing (step or time limit, or an error),
+      # so it can start the developer again instead of waiting forever.
+      - name: Tell the Request Desk the run stopped
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body "<!-- desk:run-stopped -->
+          The developer stopped before finishing (it ran out of steps or time, or hit an error). The Request Desk takes it from here.
+          Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
