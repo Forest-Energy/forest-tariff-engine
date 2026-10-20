@@ -56,7 +56,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - uses: anthropics/claude-code-action@v1
+      - id: claude
+        uses: anthropics/claude-code-action@v1
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
         with:
@@ -109,12 +110,33 @@ jobs:
             - Do not change anything outside the approved spec. Note unrelated problems you find in the PR description instead.
 
       # Tells the Request Desk when a run ends without finishing (step or time limit, or an error),
-      # so it can start the developer again instead of waiting forever.
+      # so it can start the developer again instead of waiting forever. The run-info line says how far
+      # it got: a run that ended on its first step at no cost never reached Claude (usually the API key),
+      # so the Request Desk tries it again later instead of straight away.
       - name: Tell the Request Desk the run stopped
         if: failure() || cancelled()
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
+          EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
+          ISSUE: ${{ github.event.issue.number }}
+          LOG_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body "<!-- desk:run-stopped -->
-          The developer stopped before finishing (it ran out of steps or time, or hit an error). The Request Desk takes it from here.
-          Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          turns=""; cost=""; why=""
+          if [ -n "$EXECUTION_FILE" ] && [ -f "$EXECUTION_FILE" ]; then
+            res=$(jq -c 'if type == "array" then .[] else . end | select(.type == "result")' "$EXECUTION_FILE" 2>/dev/null | tail -n 1)
+            if [ -n "$res" ]; then
+              turns=$(jq -r '.num_turns // empty' <<<"$res")
+              cost=$(jq -r '.total_cost_usd // empty' <<<"$res")
+              if [ "$(jq -r '.is_error // false' <<<"$res")" = "true" ]; then
+                why=$(jq -r '(.result // .subtype // "") | tostring' <<<"$res" | tr '\r\n' '  ' | sed -e 's/<!--//g' -e 's/-->//g' | cut -c1-300)
+              fi
+            fi
+          fi
+          {
+            echo "<!-- desk:run-stopped -->"
+            echo "<!-- desk:run-info turns=${turns:-?} cost=${cost:-?} -->"
+            echo "The developer stopped before finishing (it ran out of steps or time, or hit an error). The Request Desk takes it from here."
+            if [ -n "$why" ]; then echo "Reason given: $why"; fi
+            echo "Log: $LOG_URL"
+          } > "$RUNNER_TEMP/run-stopped.md"
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/run-stopped.md"
