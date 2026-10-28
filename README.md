@@ -147,6 +147,7 @@ Short version:
 
 - **schema_version 1**: flat structure, single live version per tariff.
 - **schema_version 2** (current): each provider/tariff wraps versions in a `versions` list with `effective` dates, supporting historical lookups.
+- Optional per-tariff `other_charges`: a list of `{label, value, unit, note?}` for published charges the engine does not price (reactive energy, energy blocks, per-Amp capacity). Display only; the engine ignores it.
 
 Migration script: `scripts/migrate_tariff_v2.py` (one-off, already applied).
 

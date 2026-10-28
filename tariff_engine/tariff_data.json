@@ -7684,6 +7684,567 @@
           }
         }
       ]
+    },
+    "Sol Plaatje Local Municipality": {
+      "escalation_month": 7,
+      "escalation_day": 1,
+      "versions": [
+        {
+          "effective": "2026-07-01",
+          "tariffs": {
+            "Sol Plaatje Bulk Consumer TOU LV <200 kVA": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 789.61,
+                  "S": 294.63,
+                  "O": 214.72
+                },
+                "LD": {
+                  "P": 322.34,
+                  "S": 239.35,
+                  "O": 197.42
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 80.5896,
+              "demand_r_kva_month": 219.1237,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 80.5896,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 219.1237,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                },
+                {
+                  "label": "Reactive energy charge (all seasons, Peak and Standard)",
+                  "value": 0.2934,
+                  "unit": "R/kvarh",
+                  "note": "Not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Bulk Consumer TOU LV 200-500 kVA": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 795.06,
+                  "S": 298.03,
+                  "O": 228.33
+                },
+                "LD": {
+                  "P": 321.72,
+                  "S": 246.29,
+                  "O": 204.88
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 80.5896,
+              "demand_r_kva_month": 172.7022,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 80.5896,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 172.7022,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                },
+                {
+                  "label": "Reactive energy charge (all seasons, Peak and Standard)",
+                  "value": 0.2934,
+                  "unit": "R/kvarh",
+                  "note": "Not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Bulk Consumer TOU MV": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 792.76,
+                  "S": 290.81,
+                  "O": 225.47
+                },
+                "LD": {
+                  "P": 313.28,
+                  "S": 242.67,
+                  "O": 197.32
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 76.69,
+              "demand_r_kva_month": 148.3419,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 76.69,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 148.3419,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                },
+                {
+                  "label": "Reactive energy charge (all seasons, Peak and Standard)",
+                  "value": 0.2934,
+                  "unit": "R/kvarh",
+                  "note": "Not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje TOU NPO/NGO/Schools LV <200 kVA": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 716.73,
+                  "S": 287.59,
+                  "O": 199.95
+                },
+                "LD": {
+                  "P": 307.21,
+                  "S": 235.65,
+                  "O": 183.99
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 98.406,
+              "demand_r_kva_month": 206.9077,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 98.406,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 206.9077,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                }
+              ]
+            },
+            "Sol Plaatje TOU NPO/NGO/Schools LV 200-500 kVA": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 721.54,
+                  "S": 292.22,
+                  "O": 202.82
+                },
+                "LD": {
+                  "P": 314.94,
+                  "S": 240.69,
+                  "O": 188.03
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 98.406,
+              "demand_r_kva_month": 206.9077,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 98.406,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 206.9077,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                }
+              ]
+            },
+            "Sol Plaatje TOU NPO/NGO/Schools MV": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 723.48,
+                  "S": 297.5,
+                  "O": 209.86
+                },
+                "LD": {
+                  "P": 322.69,
+                  "S": 245.73,
+                  "O": 193.26
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 75.9969,
+              "demand_r_kva_month": 160.4861,
+              "other_charges": [
+                {
+                  "label": "Network Access charge",
+                  "value": 75.9969,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Network capacity"
+                },
+                {
+                  "label": "Network Demand charge",
+                  "value": 160.4861,
+                  "unit": "R/kVA/month",
+                  "note": "Shown above as Demand charge"
+                }
+              ]
+            },
+            "Sol Plaatje Small Consumer TOU <70 kVA": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 975.09,
+                  "S": 295.37,
+                  "O": 160.39
+                },
+                "LD": {
+                  "P": 318.09,
+                  "S": 218.91,
+                  "O": 138.83
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 572.68,
+                  "S": 160.39,
+                  "O": 114.58
+                },
+                "LD": {
+                  "P": 251.09,
+                  "S": 151.22,
+                  "O": 114.58
+                }
+              },
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Capacity charge",
+                  "value": 4.5098,
+                  "unit": "R/Amp/phase/month",
+                  "note": "Shown for reference, not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Business Small Power": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 336.19,
+                  "S": 336.19,
+                  "O": 336.19
+                },
+                "LD": {
+                  "P": 313.23,
+                  "S": 313.23,
+                  "O": 313.23
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Capacity charge",
+                  "value": 4.5098,
+                  "unit": "R/Amp/phase/month",
+                  "note": "Shown for reference, not used in calculations"
+                },
+                {
+                  "label": "Block 1 (0-1200 kWh) and Block 2 (>1200 kWh)",
+                  "value": 3.3619,
+                  "unit": "R/kWh",
+                  "note": "Winter; same rate in both blocks"
+                },
+                {
+                  "label": "Block 1 (0-1200 kWh) and Block 2 (>1200 kWh)",
+                  "value": 3.1323,
+                  "unit": "R/kWh",
+                  "note": "Summer; same rate in both blocks"
+                }
+              ]
+            },
+            "Sol Plaatje Public Benefit and Schools": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 347.32,
+                  "S": 347.32,
+                  "O": 347.32
+                },
+                "LD": {
+                  "P": 325.33,
+                  "S": 325.33,
+                  "O": 325.33
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Capacity charge",
+                  "value": 5.2437,
+                  "unit": "R/Amp/phase/month",
+                  "note": "Shown for reference, not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Domestic Kimlite 20A": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 296.28,
+                  "S": 296.28,
+                  "O": 296.28
+                },
+                "LD": {
+                  "P": 296.28,
+                  "S": 296.28,
+                  "O": 296.28
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Block 1 (0-350 kWh)",
+                  "value": 2.9628,
+                  "unit": "R/kWh",
+                  "note": "Calculations use Block 1 for all kWh"
+                },
+                {
+                  "label": "Block 2 (>350 kWh)",
+                  "value": 3.7465,
+                  "unit": "R/kWh",
+                  "note": "Shown for reference, not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Domestic Kimlite >20A": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 276.42,
+                  "S": 276.42,
+                  "O": 276.42
+                },
+                "LD": {
+                  "P": 276.42,
+                  "S": 276.42,
+                  "O": 276.42
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Capacity charge",
+                  "value": 4.5099,
+                  "unit": "R/Amp/phase/month",
+                  "note": "Shown for reference, not used in calculations"
+                },
+                {
+                  "label": "Block 1 (0-350 kWh)",
+                  "value": 2.7642,
+                  "unit": "R/kWh",
+                  "note": "Calculations use Block 1 for all kWh"
+                },
+                {
+                  "label": "Block 2 (>350 kWh)",
+                  "value": 3.1302,
+                  "unit": "R/kWh",
+                  "note": "Shown for reference, not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Domestic Kim Power Indigent Prepaid 20A": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 277.77,
+                  "S": 277.77,
+                  "O": 277.77
+                },
+                "LD": {
+                  "P": 277.77,
+                  "S": 277.77,
+                  "O": 277.77
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 0,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Block 1 (0-50 kWh)",
+                  "value": 2.7777,
+                  "unit": "R/kWh",
+                  "note": "Calculations use Block 1 for all kWh"
+                },
+                {
+                  "label": "Block 2 (51-350 kWh)",
+                  "value": 2.7777,
+                  "unit": "R/kWh",
+                  "note": "Shown for reference, not used in calculations"
+                },
+                {
+                  "label": "Block 3 (>350 kWh)",
+                  "value": 3.8757,
+                  "unit": "R/kWh",
+                  "note": "Shown for reference, not used in calculations"
+                }
+              ]
+            },
+            "Sol Plaatje Streetlights": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 85.76,
+                  "S": 85.76,
+                  "O": 85.76
+                },
+                "LD": {
+                  "P": 85.76,
+                  "S": 85.76,
+                  "O": 85.76
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 106.1506,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Basic charge",
+                  "value": 106.1506,
+                  "unit": "R/light/month",
+                  "note": "Shown above as the service charge for one light"
+                }
+              ]
+            },
+            "Sol Plaatje Availability Charge": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 0,
+                  "S": 0,
+                  "O": 0
+                },
+                "LD": {
+                  "P": 0,
+                  "S": 0,
+                  "O": 0
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 574.6239,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Availability charge (no supply)",
+                  "value": 574.6239,
+                  "unit": "R/month"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }
