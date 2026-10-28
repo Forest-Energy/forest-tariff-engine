@@ -298,6 +298,73 @@ class TestTOUSchedules:
         assert flat_lv.ld_off_peak == pytest.approx(2.9096)
 
 
+# Sol Plaatje 2026/27, NERSA decision Table 6 pp24-31, approved column (R/kWh, R/kVA/m).
+SOL_PLAATJE_TOU = {
+    "Sol Plaatje Bulk Consumer TOU LV <200 kVA": ((7.8961, 2.9463, 2.1472), (3.2234, 2.3935, 1.9742), 219.1237, 80.5896),
+    "Sol Plaatje Bulk Consumer TOU LV 200-500 kVA": ((7.9506, 2.9803, 2.2833), (3.2172, 2.4629, 2.0488), 172.7022, 80.5896),
+    "Sol Plaatje Bulk Consumer TOU MV": ((7.9276, 2.9081, 2.2547), (3.1328, 2.4267, 1.9732), 148.3419, 76.6900),
+    "Sol Plaatje TOU NPO/NGO/Schools LV <200 kVA": ((7.1673, 2.8759, 1.9995), (3.0721, 2.3565, 1.8399), 206.9077, 98.4060),
+    "Sol Plaatje TOU NPO/NGO/Schools LV 200-500 kVA": ((7.2154, 2.9222, 2.0282), (3.1494, 2.4069, 1.8803), 206.9077, 98.4060),
+    "Sol Plaatje TOU NPO/NGO/Schools MV": ((7.2348, 2.9750, 2.0986), (3.2269, 2.4573, 1.9326), 160.4861, 75.9969),
+    "Sol Plaatje Small Consumer TOU <70 kVA": ((9.7509, 2.9537, 1.6039), (3.1809, 2.1891, 1.3883), 0, 0),
+}
+
+SOL_PLAATJE_FLAT = {
+    # name: (winter/HD, summer/LD, service R/month)
+    "Sol Plaatje Business Small Power": (3.3619, 3.1323, 0),
+    "Sol Plaatje Public Benefit and Schools": (3.4732, 3.2533, 0),
+    "Sol Plaatje Domestic Kimlite 20A": (2.9628, 2.9628, 0),
+    "Sol Plaatje Domestic Kimlite >20A": (2.7642, 2.7642, 0),
+    "Sol Plaatje Domestic Kim Power Indigent Prepaid 20A": (2.7777, 2.7777, 0),
+    "Sol Plaatje Streetlights": (0.8576, 0.8576, 106.1506),
+    "Sol Plaatje Availability Charge": (0, 0, 574.6239),
+}
+
+
+class TestSolPlaatje2026:
+    @pytest.mark.parametrize("name", sorted(SOL_PLAATJE_TOU))
+    def test_tou_rates(self, name):
+        hd, ld, demand, capacity = SOL_PLAATJE_TOU[name]
+        r = get_tariff_rates(name)
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx(hd, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx(ld, abs=1e-6)
+        assert r.demand_charge_kva == pytest.approx(demand)
+        assert r.capacity_charge_kva == pytest.approx(capacity)
+        assert r.service_charge_pa == 0
+        assert r.tou_schedule == "eskom"
+        # SSEG export credits
+        assert (r.export_hd_peak, r.export_hd_standard, r.export_hd_off_peak) == pytest.approx((5.7268, 1.6039, 1.1458), abs=1e-6)
+        assert (r.export_ld_peak, r.export_ld_standard, r.export_ld_off_peak) == pytest.approx((2.5109, 1.5122, 1.1458), abs=1e-6)
+
+    @pytest.mark.parametrize("name", sorted(SOL_PLAATJE_FLAT))
+    def test_flat_rates(self, name):
+        winter, summer, service = SOL_PLAATJE_FLAT[name]
+        r = get_tariff_rates(name)
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx((winter,) * 3, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx((summer,) * 3, abs=1e-6)
+        assert r.service_charge_pa == pytest.approx(service * 12, abs=0.01)
+        # Per-Amp capacity charges must never be priced per kVA.
+        assert r.capacity_charge_kva == 0
+        assert r.demand_charge_kva == 0
+        assert r.export_hd_peak is None
+
+    def test_all_tariffs_listed(self):
+        names = set(list_tariffs())
+        assert set(SOL_PLAATJE_TOU) | set(SOL_PLAATJE_FLAT) <= names
+
+    def test_other_charges_for_display(self):
+        from tariff_engine.rates import _get_raw_tariff_data
+        prov = _get_raw_tariff_data()["providers"]["Sol Plaatje Local Municipality"]
+        assert [v["effective"] for v in prov["versions"]] == ["2026-07-01"]
+        tariffs = prov["versions"][0]["tariffs"]
+        bulk = {o["label"]: o for o in tariffs["Sol Plaatje Bulk Consumer TOU LV <200 kVA"]["other_charges"]}
+        assert bulk["Reactive energy charge (all seasons, Peak and Standard)"]["value"] == 0.2934
+        kimlite = [o["value"] for o in tariffs["Sol Plaatje Domestic Kimlite 20A"]["other_charges"]]
+        assert kimlite == [2.9628, 3.7465]
+        small = tariffs["Sol Plaatje Small Consumer TOU <70 kVA"]["other_charges"][0]
+        assert (small["value"], small["unit"]) == (4.5098, "R/Amp/phase/month")
+
+
 # ============================================================================
 # Section 2 - build_hourly_tou
 # ============================================================================

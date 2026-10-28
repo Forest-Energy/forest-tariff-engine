@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.29.0] - 2026-10-28
+
+### Added
+- tariffs: new provider `Sol Plaatje Local Municipality` (Kimberley), 2026/27 only (effective 2026-07-01), 14 tariffs from the NERSA decision "Sol Plaatje Local Municipality: Tariff Applications for the 2026/27 Financial Year", Table 6 pp24-31, APPROVED 2026/27 column (Request Desk REQ-60). Built by `scripts/add_sol_plaatje_2026.py`.
+  - TOU: Bulk Consumer LV <200 kVA, LV 200-500 kVA, MV; TOU NPO/NGO/Schools LV <200 kVA, LV 200-500 kVA, MV; Small Consumer TOU <70 kVA. Network Access in `capacity_r_kva_month`, Network Demand in `demand_r_kva_month` (as CoCT). Example Bulk LV <200 kVA: HD 789.61 / 294.63 / 214.72, LD 322.34 / 239.35 / 197.42 c/kWh, ND R219.1237, NA R80.5896/kVA/m.
+  - SSEG export credits on every TOU tariff as `export_c_per_kwh`: HD 572.68 / 160.39 / 114.58, LD 251.09 / 151.22 / 114.58 c/kWh. Not added as `sseg_options`, so these tariffs are not Gen-Offset eligible. SSEG support charge is approved at R0.00 and left out.
+  - Non-TOU (HD = Winter, LD = Summer): Business Small Power, Public Benefit and Schools; domestic Kimlite 20A, Kimlite >20A, Kim Power Indigent Prepaid 20A; Streetlights (service = basic charge for one light); Availability Charge (R574.6239/m, no energy).
+- tariffs: optional per-tariff `other_charges` list (`label`, `value`, `unit`, optional `note`) for charges the engine does not price, so viewers can show them. The engine ignores it.
+
+### Notes
+- Not in the PDF: season months and TOU hours. Sol Plaatje TOU tariffs use the Eskom clock (no `tou_schedule`).
+- Not priced (kept in `other_charges` only): reactive energy R0.2934/kvarh on Bulk tariffs, per-Amp capacity charges (Kimlite >20A R4.5099, Public Benefit R5.2437, Business Small Power and Small Consumer TOU R4.5098 /Amp/phase/m), and energy blocks. Block tariffs are priced at Block 1, so modelled savings are conservative.
+- Basic charges are blank in the PDF and stored as 0. Tariff codes (EL1250 etc.) are mislabelled in the PDF and were ignored; rows were mapped by Season/Period.
+- All existing Eskom and municipal data is unchanged from 1.28.0.
+
 ## [1.28.0] - 2026-09-25
 
 ### Fixed
