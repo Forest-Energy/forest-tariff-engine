@@ -30,6 +30,8 @@ Mapping notes
     capacity_r_kva_month, which the model multiplies by kVA.
   - Reactive energy (R/kvarh) is not modelled, as for CoJ.
 * Basic charges are blank in the PDF and are stored as 0.
+* The Availability charge (no supply, R574.6239/m) is not a supply tariff and is
+  left out (v1.29.1).
 
 Idempotent: re-running replaces the provider in place.
 """
@@ -155,9 +157,8 @@ TARIFFS = {
     "Sol Plaatje Streetlights": flat_tariff(0.8576, service=106.1506, other_charges=[
         other("Basic charge", 106.1506, "R/light/month", "Shown above as the service charge for one light"),
     ]),
-    "Sol Plaatje Availability Charge": flat_tariff(0, service=574.6239, other_charges=[
-        other("Availability charge (no supply)", 574.6239, "R/month"),
-    ]),
+    # The Availability charge (R574.6239/m) is for stands with no supply, so it has no energy
+    # rate and is not a tariff a plant can be on. Left out (v1.29.1); see CHANGELOG.
 }
 
 

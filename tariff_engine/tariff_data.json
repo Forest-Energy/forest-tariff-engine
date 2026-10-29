@@ -8215,32 +8215,6 @@
                   "note": "Shown above as the service charge for one light"
                 }
               ]
-            },
-            "Sol Plaatje Availability Charge": {
-              "type": "municipal_flat",
-              "energy_c_per_kwh": {
-                "HD": {
-                  "P": 0,
-                  "S": 0,
-                  "O": 0
-                },
-                "LD": {
-                  "P": 0,
-                  "S": 0,
-                  "O": 0
-                }
-              },
-              "export_c_per_kwh": null,
-              "service_r_month": 574.6239,
-              "capacity_r_kva_month": 0,
-              "demand_r_kva_month": 0,
-              "other_charges": [
-                {
-                  "label": "Availability charge (no supply)",
-                  "value": 574.6239,
-                  "unit": "R/month"
-                }
-              ]
             }
           }
         }
