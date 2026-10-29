@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.29.1] - 2026-10-29
+
+### Fixed
+- tariffs: removed `Sol Plaatje Availability Charge` from the Sol Plaatje tariffs (13 remain). It is a fixed R574.6239/month for stands with no supply, so it had no energy rate and is not a tariff a plant can be on; the Solar Dashboard smoke test rejected it as a non-positive rate. The charge is recorded here and in `scripts/add_sol_plaatje_2026.py` only. All other data is unchanged from 1.29.0.
+- tests: every listed tariff must price at a positive energy rate in every season and period, the same check the Solar Dashboard runs.
+
 ## [1.29.0] - 2026-10-28
 
 ### Added

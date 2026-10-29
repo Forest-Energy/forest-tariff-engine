@@ -317,7 +317,6 @@ SOL_PLAATJE_FLAT = {
     "Sol Plaatje Domestic Kimlite >20A": (2.7642, 2.7642, 0),
     "Sol Plaatje Domestic Kim Power Indigent Prepaid 20A": (2.7777, 2.7777, 0),
     "Sol Plaatje Streetlights": (0.8576, 0.8576, 106.1506),
-    "Sol Plaatje Availability Charge": (0, 0, 574.6239),
 }
 
 
@@ -351,6 +350,18 @@ class TestSolPlaatje2026:
     def test_all_tariffs_listed(self):
         names = set(list_tariffs())
         assert set(SOL_PLAATJE_TOU) | set(SOL_PLAATJE_FLAT) <= names
+        assert "Sol Plaatje Availability Charge" not in names
+
+
+def test_every_tariff_has_a_positive_energy_rate():
+    # The Solar Dashboard smoke test prices every listed tariff and refuses a non-positive rate,
+    # so a charge-only entry (for example a no-supply availability charge) must not be a tariff.
+    bad = []
+    for name in list_tariffs():
+        r = get_tariff_rates(name)
+        if min(r.hd_peak, r.hd_standard, r.hd_off_peak, r.ld_peak, r.ld_standard, r.ld_off_peak) <= 0:
+            bad.append(name)
+    assert not bad, bad
 
     def test_other_charges_for_display(self):
         from tariff_engine.rates import _get_raw_tariff_data
