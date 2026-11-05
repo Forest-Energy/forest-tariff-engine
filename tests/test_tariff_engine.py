@@ -298,6 +298,49 @@ class TestTOUSchedules:
         assert flat_lv.ld_off_peak == pytest.approx(2.9096)
 
 
+# Nelson Mandela Bay 2026/27, approved tariffs sheet (Eastern Cape, rows 1496-1821), R/kWh and R/kVA/m.
+# name: (HD P/S/O, LD P/S/O, service R/m, demand R/kVA/m, capacity R/kVA/m, export HD, export LD)
+NMB_2026 = {
+    "NMB Medium Business Single Rate (T33/38)": ((4.99,) * 3, (3.69,) * 3, 1948.09, 0, 0, None, None),
+    "NMB Medium Business Metered Demand (Scale 34/39)": ((4.00,) * 3, (2.96,) * 3, 1771.56, 248.83, 0, None, None),
+    "NMB LV Medium Business TOU (Scale 32X/33Y/32Y)": (
+        (8.45, 2.43, 1.76), (3.67, 2.30, 1.76), 1850.30, 205.79, 0, (5.07, 1.46, 1.06), (2.20, 1.38, 1.05)),
+    "NMB Large Business Metered Demand (Scale 35/30)": ((3.83,) * 3, (2.51,) * 3, 7571.72, 197.99, 0, None, None),
+    "NMB MV Large Business TOU (Scale 40X/40Y/40Z)": (
+        (7.38, 2.29, 1.44), (3.27, 2.13, 1.66), 7402.38, 170.29, 0, (4.43, 1.37, 0.86), (1.37, 1.28, 1.00)),
+    "NMB Extra High Voltage TOU (Scale 40A)": (
+        (7.47, 2.24, 1.43), (3.30, 2.12, 1.58), 20333.35, 14.00, 45.00, (4.48, 1.34, 0.86), (1.98, 1.27, 0.95)),
+}
+
+
+class TestNelsonMandelaBay2026:
+    @pytest.mark.parametrize("name", sorted(NMB_2026))
+    def test_2026_rates(self, name):
+        hd, ld, service, demand, capacity, exp_hd, exp_ld = NMB_2026[name]
+        r = get_tariff_rates(name)
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx(hd, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx(ld, abs=1e-6)
+        assert r.service_charge_pa == pytest.approx(service * 12, abs=0.01)
+        assert r.demand_charge_kva == pytest.approx(demand)
+        assert r.capacity_charge_kva == pytest.approx(capacity)
+        if exp_hd is None:
+            assert r.export_hd_peak is None
+        else:
+            assert (r.export_hd_peak, r.export_hd_standard, r.export_hd_off_peak) == pytest.approx(exp_hd, abs=1e-6)
+            assert (r.export_ld_peak, r.export_ld_standard, r.export_ld_off_peak) == pytest.approx(exp_ld, abs=1e-6)
+
+    def test_versions_and_history(self):
+        import datetime as dt
+        from tariff_engine.rates import _get_raw_tariff_data, _load_tariff_json_for_date, _resolve_tariff_rates
+        prov = _get_raw_tariff_data()["providers"]["Nelson Mandela Bay"]
+        assert [v["effective"] for v in prov["versions"]] == ["2025-07-01", "2026-07-01"]
+        # 2025/26 must still price at the old rates.
+        name = "NMB Medium Business Single Rate (T33/38)"
+        old = _resolve_tariff_rates(name, _load_tariff_json_for_date(name, dt.date(2026, 3, 1)))
+        assert old.hd_peak == pytest.approx(4.4514)
+        assert old.service_charge_pa == pytest.approx(1739.37 * 12, abs=0.01)
+
+
 # Sol Plaatje 2026/27, NERSA decision Table 6 pp24-31, approved column (R/kWh, R/kVA/m).
 SOL_PLAATJE_TOU = {
     "Sol Plaatje Bulk Consumer TOU LV <200 kVA": ((7.8961, 2.9463, 2.1472), (3.2234, 2.3935, 1.9742), 219.1237, 80.5896),
