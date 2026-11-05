@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.30.0] - 2026-11-05
+
+### Added
+- tariffs: Nelson Mandela Bay 2026/27 (effective 2026-07-01) for all 6 existing NMB tariffs, from "Capturing of approved tariffs 4 August 2026", Eastern Cape sheet, NELSON MANDELA BAY METRO section (rows 1496-1821). Built by `scripts/add_nmb_2026.py`. The 2025/26 version is unchanged and still used for dates before 1 July 2026. Tariff names are unchanged.
+  - Mapping: Medium Business Single Rate to tariff 12; Medium Business Metered Demand to 14; LV Medium Business TOU to 15 (now scales 34X/34Y/34Z); Large Business Metered Demand to 16 (T35); MV Large Business TOU to 17 (40X/40Y/40Z); Extra High Voltage TOU to 18 (now scales 50X/50Y/50Z). HD = Winter, LD = Summer.
+  - Change on 2025/26: energy and basic charges +12% (Medium Business), +10% (Large Business, MV TOU), +9.5% (EHV). Demand +12% (Metered Demand), +10% (T35), +5% (LV and MV TOU). Example Single Rate: winter 4.99, summer 3.69 R/kWh, basic R1 948.09/m.
+  - Export credits (34Z, 40Z) updated on LV and MV TOU; MV credits fall sharply (HD peak 529.95 to 443.00 c/kWh, LD peak 229.92 to 137.00). New: EHV now carries export credits (50Z), HD 448.00 / 134.00 / 86.00, LD 198.00 / 127.00 / 95.00 c/kWh.
+
+### Notes
+- EHV demand charge falls from R19.83 to R14.00/kVA and capacity from R50.04 to R45.00/kVA as published, while energy rises 9.5%. Loaded as published; confirm against the approved schedule.
+- Wheeling charges (34Y, 40Y, 50Y) and the domestic, prepaid, small business and Net Billing 32X/33X tariffs are still not in the engine.
+- Sheet typos ignored: 32Z winter standard export shown as +1.82 (row 1648); 40X import labelled "34X" (row 1750).
+- Tariff names still carry the old scale codes (LV TOU "32X/33Y/32Y", EHV "40A"); renaming would break existing lookups, so it is left for a separate change.
+- All other providers unchanged from 1.29.1.
+
 ## [1.29.1] - 2026-10-29
 
 ### Fixed

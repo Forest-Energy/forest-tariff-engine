@@ -3405,6 +3405,158 @@
               "demand_r_kva_month": 19.83
             }
           }
+        },
+        {
+          "effective": "2026-07-01",
+          "tariffs": {
+            "NMB Medium Business Single Rate (T33/38)": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 499.0,
+                  "S": 499.0,
+                  "O": 499.0
+                },
+                "LD": {
+                  "P": 369.0,
+                  "S": 369.0,
+                  "O": 369.0
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 1948.09,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0
+            },
+            "NMB Medium Business Metered Demand (Scale 34/39)": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 400.0,
+                  "S": 400.0,
+                  "O": 400.0
+                },
+                "LD": {
+                  "P": 296.0,
+                  "S": 296.0,
+                  "O": 296.0
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 1771.56,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 248.83
+            },
+            "NMB LV Medium Business TOU (Scale 32X/33Y/32Y)": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 845.0,
+                  "S": 243.0,
+                  "O": 176.0
+                },
+                "LD": {
+                  "P": 367.0,
+                  "S": 230.0,
+                  "O": 176.0
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 507.0,
+                  "S": 146.0,
+                  "O": 106.0
+                },
+                "LD": {
+                  "P": 220.0,
+                  "S": 138.0,
+                  "O": 105.0
+                }
+              },
+              "service_r_month": 1850.3,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 205.79
+            },
+            "NMB Large Business Metered Demand (Scale 35/30)": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 383.0,
+                  "S": 383.0,
+                  "O": 383.0
+                },
+                "LD": {
+                  "P": 251.0,
+                  "S": 251.0,
+                  "O": 251.0
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 7571.72,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 197.99
+            },
+            "NMB MV Large Business TOU (Scale 40X/40Y/40Z)": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 738.0,
+                  "S": 229.0,
+                  "O": 144.0
+                },
+                "LD": {
+                  "P": 327.0,
+                  "S": 213.0,
+                  "O": 166.0
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 443.0,
+                  "S": 137.0,
+                  "O": 86.0
+                },
+                "LD": {
+                  "P": 137.0,
+                  "S": 128.0,
+                  "O": 100.0
+                }
+              },
+              "service_r_month": 7402.38,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 170.29
+            },
+            "NMB Extra High Voltage TOU (Scale 40A)": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 747.0,
+                  "S": 224.0,
+                  "O": 143.0
+                },
+                "LD": {
+                  "P": 330.0,
+                  "S": 212.0,
+                  "O": 158.0
+                }
+              },
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 448.0,
+                  "S": 134.0,
+                  "O": 86.0
+                },
+                "LD": {
+                  "P": 198.0,
+                  "S": 127.0,
+                  "O": 95.0
+                }
+              },
+              "service_r_month": 20333.35,
+              "capacity_r_kva_month": 45.0,
+              "demand_r_kva_month": 14.0
+            }
+          }
         }
       ]
     },
