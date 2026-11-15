@@ -131,13 +131,11 @@ TOU_SCHEDULES: dict[str, dict] = {
             "LO": {"peak": [], "standard": [[18, 20]]},
         },
     },
-    # JB Marks Local Municipality (Potchefstroom) TOU clock for the 2026/27 rate
-    # year, from the Schedule of Tariffs Note 4 (PDF p15). High Demand = Jun/Jul/
-    # Aug. Saturday bands are season-independent; Sundays are off-peak all day.
-    # "A public holiday falling on a weekday will be treated as a normal day on
-    # which it falls", which is what get_tou_period already does (it ignores
-    # is_holiday). Band for band equal to stellenbosch-2025, kept separate so
-    # either utility can revise its clock without touching the other.
+    # JB Marks Local Municipality (Potchefstroom) 2026/27 TOU clock, Schedule of
+    # Tariffs Note 4 (PDF p15). High Demand = Jun/Jul/Aug; Sundays off-peak. "A
+    # public holiday falling on a weekday will be treated as a normal day on which
+    # it falls", as get_tou_period already does (it ignores is_holiday). Same bands
+    # as stellenbosch-2025, kept separate so either clock can change on its own.
     "jbmarks-2026": {
         "hd_months": [6, 7, 8],
         "weekday": {
