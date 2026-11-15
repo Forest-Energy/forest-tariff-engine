@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.31.0] - 2026-11-15
+## [1.32.0] - 2026-11-15
 
 ### Added
 - tariffs: new provider `JB Marks Local Municipality` (Potchefstroom), 2026/27 only (effective 2026-07-01), Tariff D from the JB Marks "Schedule of Tariffs for the Supply of Electricity" 1 July 2026 - 30 June 2027 (VAT excl.), pp12-15, bold 2026/27 values only (Request Desk REQ-89). Built by `scripts/add_jb_marks_2026.py`.
@@ -12,7 +12,30 @@
 - **The schedule is still awaiting NERSA approval** (PDF cover page). Rates may change; a follow-up release will be needed if they do.
 - Not modelled: the AMR fixed charge (R4 083.54/month, kept in `other_charges` for display only, so AMR-metered sites are understated by about R38.6k/year), the exclusion of off-peak demand from the demand charge (Note 1), the NPO variants (D.4-D.6), Tariffs A, B, C, E, F, miscellaneous charges and deposits.
 - Only a 2026-07-01 version exists, so lookups for earlier dates return the 2026/27 rates (as Sol Plaatje).
-- All other providers unchanged from 1.30.0.
+- All other providers unchanged from 1.31.0.
+
+## [1.31.0] - 2026-11-15
+
+### Fixed
+- tariffs: Newcastle Scale 3, 4 and 5 now match Newcastle Municipality Notice CS 9/2026 (19 March 2026, Council resolution CM 27), pp5-6 (Request Desk REQ-76). Built by `scripts/fix_newcastle_2026.py`. Tariff names are unchanged.
+- **2025/26 version (effective 2025-07-01) corrected** to the notice's "2025/2026 Approved Tariff" column. This changes date-based results for Newcastle before 1 July 2026. The old values were misplaced (demand, capacity and basic charges had been loaded as energy rates) and TOU tariffs were flat:
+  - Scale 3 Small Business LV: energy 273.00 -> 273.03 c/kWh; basic 1 167.63 -> 1 167.64 R/m.
+  - Scale 4S Medium Business LV: energy 261.78 -> 148.03 c/kWh (261.78 is the network demand charge); basic 0 -> 2 511.53 R/m; demand 0 -> 261.78, capacity 0 -> 227.04 R/kVA/m.
+  - Scale 4T Medium Business TOU Demand: `municipal_flat` -> `municipal_tou`; flat 227.05 -> HD 583.13 / 295.73 / 166.80, LD 493.35 / 221.92 / 138.13 c/kWh; demand 1 164.66 -> 82.22, capacity 2 511.53 -> 61.48 R/kVA/m (the old values were the metered basic charge and, with a typo, the vacant-stand basic charge of 1 164.76); basic 0 -> 2 511.53 R/m.
+  - Scale 5T Large Business MV TOU: `municipal_flat` -> `municipal_tou`; flat 81.71 -> HD 511.30 / 217.94 / 105.90, LD 296.09 / 188.42 / 97.77 c/kWh; demand 237.92 -> 81.71, capacity 210.97 -> 62.01 R/kVA/m (the old values were the Standard tariff's charges); basic 0 -> 4 932.93 R/m.
+
+### Added
+- tariffs: Newcastle 2026/27 version (effective 2026-07-01), the notice's "2026/2027 Proposed Tariff" column (+9% on every rate). Example Scale 3: 297.60 c/kWh, basic R1 272.73/m; Scale 4T: HD 635.61 / 322.35 / 181.81, LD 537.75 / 241.89 / 150.56 c/kWh, demand R89.62, capacity R67.01/kVA/m.
+- tariffs: two Newcastle tariffs that were missing, in both versions: `Newcastle Scale 3T Small Business LV TOU` and `Newcastle Scale 5S Large Business MV` (Standard; 2026/27 energy 161.35 c/kWh, demand R259.33, capacity R229.96/kVA/m, basic R5 376.89/m).
+- The vacant-stand basic charge (R1 164.76 in 2025/26, R1 269.59 in 2026/27) is shown in `other_charges` on the Standard tariffs, for display only. It has no supply, so it is not a tariff.
+- tests: `TestNewcastle2026` covers both years, positive energy rates and no flat TOU tariff.
+
+### Notes
+- The 2026/27 column is the council-approved draft "for submission to NERSA", not a NERSA approval. Requester bill evidence shows it is being charged.
+- The notice says consumption is billed at the new rate from the August 2026 accounts, while fixed charges start 1 July 2026. The engine has one effective date per version, so 1 July 2026 is used.
+- The schedule gives one metered basic charge per scale, so the TOU tariffs carry the same `service_r_month` as the Standard tariff on that scale.
+- TOU uses the default Eskom clock ("in accordance with Eskom's specified time schedule"). Scale 5's "no demand charge in off-peak" is not modelled.
+- No zero-rate entry was loaded (the stray 0.00 under Scale 3 TOU is not a rate). Scales 1, 2, 6 and 7 are not in the engine. All other providers are unchanged from 1.30.0.
 
 ## [1.30.0] - 2026-11-05
 

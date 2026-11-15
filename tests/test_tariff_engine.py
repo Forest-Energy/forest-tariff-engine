@@ -451,6 +451,100 @@ class TestJBMarks2026:
         assert all(get_tou_period(m, h, 7, False, S)[1] == 3 for m in (3, 7) for h in range(24))
 
 
+# Newcastle Notice CS 9/2026 pp5-6, Scales 3/4/5, R/kWh and R/kVA/m.
+# name: (HD P/S/O, LD P/S/O, basic metered R/m, network demand, network capacity)
+NEWCASTLE = {
+    "2025/26": {
+        "Newcastle Scale 3 Small Business LV": ((2.7303,) * 3, (2.7303,) * 3, 1167.64, 0, 0),
+        "Newcastle Scale 3T Small Business LV TOU": ((5.2028, 2.2185, 1.0770), (3.0133, 1.9175, 0.9936), 1167.64, 0, 0),
+        "Newcastle Scale 4S Medium Business LV": ((1.4803,) * 3, (1.4803,) * 3, 2511.53, 261.78, 227.04),
+        "Newcastle Scale 4T Medium Business TOU Demand": ((5.8313, 2.9573, 1.6680), (4.9335, 2.2192, 1.3813), 2511.53, 82.22, 61.48),
+        "Newcastle Scale 5S Large Business MV": ((1.4803,) * 3, (1.4803,) * 3, 4932.93, 237.92, 210.97),
+        "Newcastle Scale 5T Large Business MV TOU": ((5.1130, 2.1794, 1.0590), (2.9609, 1.8842, 0.9777), 4932.93, 81.71, 62.01),
+    },
+    "2026/27": {
+        "Newcastle Scale 3 Small Business LV": ((2.9760,) * 3, (2.9760,) * 3, 1272.73, 0, 0),
+        "Newcastle Scale 3T Small Business LV TOU": ((5.6711, 2.4182, 1.1739), (3.2845, 2.0901, 1.0830), 1272.73, 0, 0),
+        "Newcastle Scale 4S Medium Business LV": ((1.6135,) * 3, (1.6135,) * 3, 2737.57, 285.34, 247.47),
+        "Newcastle Scale 4T Medium Business TOU Demand": ((6.3561, 3.2235, 1.8181), (5.3775, 2.4189, 1.5056), 2737.57, 89.62, 67.01),
+        "Newcastle Scale 5S Large Business MV": ((1.6135,) * 3, (1.6135,) * 3, 5376.89, 259.33, 229.96),
+        "Newcastle Scale 5T Large Business MV TOU": ((5.5732, 2.3755, 1.1543), (3.2274, 2.0538, 1.0657), 5376.89, 89.06, 67.59),
+    },
+}
+NEWCASTLE_DATES = {
+    "2025/26": [(2025, 7, 1), (2026, 6, 30)],
+    "2026/27": [(2026, 7, 1), (2027, 3, 1)],
+}
+NEWCASTLE_CASES = [
+    (year, date, name)
+    for year, dates in NEWCASTLE_DATES.items()
+    for date in dates
+    for name in sorted(NEWCASTLE[year])
+]
+
+
+def _newcastle_version(effective):
+    from tariff_engine.rates import _get_raw_tariff_data
+    prov = _get_raw_tariff_data()["providers"]["Newcastle"]
+    return next(v for v in prov["versions"] if v["effective"] == effective)
+
+
+class TestNewcastle2026:
+    @pytest.mark.parametrize("year,date,name", NEWCASTLE_CASES)
+    def test_rates_for_date(self, year, date, name):
+        # AC1-AC6 (2026/27) and AC7 (2025/26 for any date before 1 July 2026).
+        import datetime as dt
+        from tariff_engine import get_tariff_rates_for_date
+        hd, ld, basic, demand, capacity = NEWCASTLE[year][name]
+        r = get_tariff_rates_for_date(name, dt.date(*date))
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx(hd, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx(ld, abs=1e-6)
+        assert r.service_charge_pa == pytest.approx(basic * 12, abs=0.01)
+        assert r.demand_charge_kva == pytest.approx(demand)
+        assert r.capacity_charge_kva == pytest.approx(capacity)
+        assert r.tou_schedule == "eskom"
+        assert r.export_hd_peak is None
+
+    @pytest.mark.parametrize("name", sorted(NEWCASTLE["2026/27"]))
+    def test_latest_is_2026(self, name):
+        hd, ld, basic, demand, capacity = NEWCASTLE["2026/27"][name]
+        r = get_tariff_rates(name)
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx(hd, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx(ld, abs=1e-6)
+        assert r.service_charge_pa == pytest.approx(basic * 12, abs=0.01)
+
+    @pytest.mark.parametrize("effective,vacant", [("2025-07-01", 1164.76), ("2026-07-01", 1269.59)])
+    def test_vacant_stand_basic_charge(self, effective, vacant):
+        # Vacant-stand basic charge is display-only on the Standard tariffs, never a tariff.
+        tariffs = _newcastle_version(effective)["tariffs"]
+        for name in ("Newcastle Scale 3 Small Business LV", "Newcastle Scale 4S Medium Business LV",
+                     "Newcastle Scale 5S Large Business MV"):
+            (row,) = tariffs[name]["other_charges"]
+            assert (row["label"], row["value"], row["unit"]) == ("Basic charge, vacant stand", vacant, "R/month")
+
+    def test_versions_and_names(self):
+        from tariff_engine.rates import _get_raw_tariff_data
+        prov = _get_raw_tariff_data()["providers"]["Newcastle"]
+        assert [v["effective"] for v in prov["versions"]] == ["2025-07-01", "2026-07-01"]
+        for v in prov["versions"]:
+            assert set(v["tariffs"]) == set(NEWCASTLE["2026/27"])
+        listed = {n for n in list_tariffs() if n.startswith("Newcastle")}
+        assert listed == set(NEWCASTLE["2026/27"])
+
+    @pytest.mark.parametrize("year,date,name", NEWCASTLE_CASES)
+    def test_positive_and_tou_not_flat(self, year, date, name):
+        # AC8: every Scale 3/4/5 tariff has a positive energy rate (no zero-rate entries),
+        # and every TOU tariff has distinct rates across seasons and periods.
+        import datetime as dt
+        from tariff_engine import get_tariff_rates_for_date
+        r = get_tariff_rates_for_date(name, dt.date(*date))
+        cells = (r.hd_peak, r.hd_standard, r.hd_off_peak, r.ld_peak, r.ld_standard, r.ld_off_peak)
+        assert min(cells) > 0
+        raw = _newcastle_version("2025-07-01" if year == "2025/26" else "2026-07-01")["tariffs"][name]
+        if raw["type"] == "municipal_tou":
+            assert len(set(cells)) == 6
+
+
 def test_every_tariff_has_a_positive_energy_rate():
     # The Solar Dashboard smoke test prices every listed tariff and refuses a non-positive rate,
     # so a charge-only entry (for example a no-supply availability charge) must not be a tariff.
