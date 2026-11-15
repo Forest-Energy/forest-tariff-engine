@@ -8371,6 +8371,73 @@
           }
         }
       ]
+    },
+    "JB Marks Local Municipality": {
+      "escalation_month": 7,
+      "escalation_day": 1,
+      "versions": [
+        {
+          "effective": "2026-07-01",
+          "tariffs": {
+            "JB Marks Tariff D LV (230/400 V)": {
+              "type": "municipal_tou",
+              "tou_schedule": "jbmarks-2026",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 927.01,
+                  "S": 351.1,
+                  "O": 206.29
+                },
+                "LD": {
+                  "P": 374.72,
+                  "S": 243.28,
+                  "O": 179.52
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 868.15,
+              "capacity_r_kva_month": 97.73,
+              "demand_r_kva_month": 149.04,
+              "other_charges": [
+                {
+                  "label": "Fixed charge, Automated Meter Reading (AMR)",
+                  "value": 4083.54,
+                  "unit": "R/month",
+                  "note": "Shown for reference; calculations use the Normal Read fixed charge"
+                }
+              ]
+            },
+            "JB Marks Tariff D MV (>400 V to 11 kV)": {
+              "type": "municipal_tou",
+              "tou_schedule": "jbmarks-2026",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 879.65,
+                  "S": 336.82,
+                  "O": 194.42
+                },
+                "LD": {
+                  "P": 352.35,
+                  "S": 222.02,
+                  "O": 171.79
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 869.77,
+              "capacity_r_kva_month": 93.33,
+              "demand_r_kva_month": 146.48,
+              "other_charges": [
+                {
+                  "label": "Fixed charge, Automated Meter Reading (AMR)",
+                  "value": 4083.54,
+                  "unit": "R/month",
+                  "note": "Shown for reference; calculations use the Normal Read fixed charge"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }
