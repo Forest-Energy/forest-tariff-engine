@@ -396,6 +396,61 @@ class TestSolPlaatje2026:
         assert "Sol Plaatje Availability Charge" not in names
 
 
+# JB Marks 2026/27 Tariff D, Schedule of Tariffs pp12-15, bold values (R/kWh, R/kVA/m, R/m).
+# name: (HD P/S/O, LD P/S/O, demand, NAC, fixed Normal Read)
+JBM_LV, JBM_MV = "JB Marks Tariff D LV (230/400 V)", "JB Marks Tariff D MV (>400 V to 11 kV)"
+JB_MARKS_D = {
+    JBM_LV: ((9.2701, 3.5110, 2.0629), (3.7472, 2.4328, 1.7952), 149.04, 97.73, 868.15),
+    JBM_MV: ((8.7965, 3.3682, 1.9442), (3.5235, 2.2202, 1.7179), 146.48, 93.33, 869.77),
+}
+
+
+class TestJBMarks2026:
+    def test_listed_with_one_version(self):  # AC1
+        from tariff_engine.rates import _get_raw_tariff_data
+        assert set(JB_MARKS_D) <= set(list_tariffs())
+        prov = _get_raw_tariff_data()["providers"]["JB Marks Local Municipality"]
+        assert [v["effective"] for v in prov["versions"]] == ["2026-07-01"]
+
+    @pytest.mark.parametrize("name", sorted(JB_MARKS_D))
+    def test_all_rates(self, name):
+        hd, ld, demand, nac, fixed = JB_MARKS_D[name]
+        r = get_tariff_rates(name)
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx(hd, abs=1e-6)
+        assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx(ld, abs=1e-6)
+        assert (r.demand_charge_kva, r.capacity_charge_kva) == pytest.approx((demand, nac))
+        assert r.service_charge_pa == pytest.approx(fixed * 12, abs=0.01)
+        assert r.export_hd_peak is None and r.tou_schedule == "jbmarks-2026"
+
+    def test_lv_low_demand(self):  # AC2
+        import datetime as dt
+        from tariff_engine import get_tariff_rates_for_date
+        assert get_tou_period(9, 12, 1, False, "jbmarks-2026")[0] == "LO"
+        for r in (get_tariff_rates_for_date(JBM_LV, dt.date(2026, 9, 1)), get_tariff_rates(JBM_LV)):
+            assert (r.ld_peak, r.ld_standard, r.ld_off_peak) == pytest.approx((3.7472, 2.4328, 1.7952))
+            assert r.demand_charge_kva == pytest.approx(149.04)
+
+    def test_mv_high_demand(self):  # AC3
+        import datetime as dt
+        from tariff_engine import get_tariff_rates_for_date
+        assert get_tou_period(7, 12, 1, False, "jbmarks-2026")[0] == "HI"
+        r = get_tariff_rates_for_date(JBM_MV, dt.date(2026, 7, 15))
+        assert (r.hd_peak, r.hd_standard, r.hd_off_peak) == pytest.approx((8.7965, 3.3682, 1.9442))
+        assert r.capacity_charge_kva == pytest.approx(93.33)
+
+    def test_tou_schedule(self):  # AC4 (06:30 is the 06:00 hour)
+        S = "jbmarks-2026"
+        assert S in list_tou_schedules()
+        cases = {(3, 8, 1): ("LO", 1), (7, 8, 1): ("HI", 1), (3, 6, 1): ("LO", 2), (7, 6, 1): ("HI", 1),
+                 (7, 9, 1): ("HI", 2), (7, 17, 1): ("HI", 1), (7, 19, 1): ("HI", 2), (7, 22, 1): ("HI", 3),
+                 (3, 10, 1): ("LO", 2), (3, 18, 1): ("LO", 1), (3, 20, 1): ("LO", 2), (3, 22, 1): ("LO", 3),
+                 (7, 7, 6): ("HI", 2), (3, 12, 6): ("LO", 3), (7, 18, 6): ("HI", 2), (3, 20, 6): ("LO", 3)}
+        for (m, h, wd), want in cases.items():
+            assert get_tou_period(m, h, wd, False, S) == want
+            assert get_tou_period(m, h, wd, True, S) == want  # holiday = the day it falls on
+        assert all(get_tou_period(m, h, 7, False, S)[1] == 3 for m in (3, 7) for h in range(24))
+
+
 # Newcastle Notice CS 9/2026 pp5-6, Scales 3/4/5, R/kWh and R/kVA/m.
 # name: (HD P/S/O, LD P/S/O, basic metered R/m, network demand, network capacity)
 NEWCASTLE = {

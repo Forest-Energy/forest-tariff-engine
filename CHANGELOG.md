@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.32.0] - 2026-11-15
+
+### Added
+- tariffs: new provider `JB Marks Local Municipality` (Potchefstroom), 2026/27 only (effective 2026-07-01), Tariff D from the JB Marks "Schedule of Tariffs for the Supply of Electricity" 1 July 2026 - 30 June 2027 (VAT excl.), pp12-15, bold 2026/27 values only (Request Desk REQ-89). Built by `scripts/add_jb_marks_2026.py`.
+  - Two entries, one per voltage band: `JB Marks Tariff D LV (230/400 V)` and `JB Marks Tariff D MV (>400 V to 11 kV)`. Bulk supply up to 11 kV, >50 kVA, NMD <1 MVA.
+  - Energy (printed in R/kWh, stored in c/kWh), example LV: HD 927.01 / 351.10 / 206.29, LD 374.72 / 243.28 / 179.52 c/kWh. Demand in `demand_r_kva_month` (LV R149.04, MV R146.48/kVA), NAC in `capacity_r_kva_month` (LV R97.73, MV R93.33/kVA), fixed charge = Normal Read (LV R868.15, MV R869.77/month). No export rates.
+- tou: new schedule `jbmarks-2026` (Note 4, p15). Same bands as `stellenbosch-2025`; public holidays are treated as the day they fall on.
+
+### Notes
+- **The schedule is still awaiting NERSA approval** (PDF cover page). Rates may change; a follow-up release will be needed if they do.
+- Not modelled: the AMR fixed charge (R4 083.54/month, kept in `other_charges` for display only, so AMR-metered sites are understated by about R38.6k/year), the exclusion of off-peak demand from the demand charge (Note 1), the NPO variants (D.4-D.6), Tariffs A, B, C, E, F, miscellaneous charges and deposits.
+- Only a 2026-07-01 version exists, so lookups for earlier dates return the 2026/27 rates (as Sol Plaatje).
+- All other providers unchanged from 1.31.0.
+
 ## [1.31.0] - 2026-11-15
 
 ### Fixed
