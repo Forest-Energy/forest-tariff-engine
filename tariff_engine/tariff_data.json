@@ -6801,18 +6801,45 @@
               "type": "municipal_flat",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 273.0,
-                  "S": 273.0,
-                  "O": 273.0
+                  "P": 273.03,
+                  "S": 273.03,
+                  "O": 273.03
                 },
                 "LD": {
-                  "P": 273.0,
-                  "S": 273.0,
-                  "O": 273.0
+                  "P": 273.03,
+                  "S": 273.03,
+                  "O": 273.03
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 1167.63,
+              "service_r_month": 1167.64,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1164.76,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
+            },
+            "Newcastle Scale 3T Small Business LV TOU": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 520.28,
+                  "S": 221.85,
+                  "O": 107.7
+                },
+                "LD": {
+                  "P": 301.33,
+                  "S": 191.75,
+                  "O": 99.36
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 1167.64,
               "capacity_r_kva_month": 0,
               "demand_r_kva_month": 0
             },
@@ -6820,58 +6847,236 @@
               "type": "municipal_flat",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 261.78,
-                  "S": 261.78,
-                  "O": 261.78
+                  "P": 148.03,
+                  "S": 148.03,
+                  "O": 148.03
                 },
                 "LD": {
-                  "P": 261.78,
-                  "S": 261.78,
-                  "O": 261.78
+                  "P": 148.03,
+                  "S": 148.03,
+                  "O": 148.03
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 0,
+              "service_r_month": 2511.53,
+              "capacity_r_kva_month": 227.04,
+              "demand_r_kva_month": 261.78,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1164.76,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
+            },
+            "Newcastle Scale 4T Medium Business TOU Demand": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 583.13,
+                  "S": 295.73,
+                  "O": 166.8
+                },
+                "LD": {
+                  "P": 493.35,
+                  "S": 221.92,
+                  "O": 138.13
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 2511.53,
+              "capacity_r_kva_month": 61.48,
+              "demand_r_kva_month": 82.22
+            },
+            "Newcastle Scale 5S Large Business MV": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 148.03,
+                  "S": 148.03,
+                  "O": 148.03
+                },
+                "LD": {
+                  "P": 148.03,
+                  "S": 148.03,
+                  "O": 148.03
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 4932.93,
+              "capacity_r_kva_month": 210.97,
+              "demand_r_kva_month": 237.92,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1164.76,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
+            },
+            "Newcastle Scale 5T Large Business MV TOU": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 511.3,
+                  "S": 217.94,
+                  "O": 105.9
+                },
+                "LD": {
+                  "P": 296.09,
+                  "S": 188.42,
+                  "O": 97.77
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 4932.93,
+              "capacity_r_kva_month": 62.01,
+              "demand_r_kva_month": 81.71
+            }
+          }
+        },
+        {
+          "effective": "2026-07-01",
+          "tariffs": {
+            "Newcastle Scale 3 Small Business LV": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 297.6,
+                  "S": 297.6,
+                  "O": 297.6
+                },
+                "LD": {
+                  "P": 297.6,
+                  "S": 297.6,
+                  "O": 297.6
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 1272.73,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 0,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1269.59,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
+            },
+            "Newcastle Scale 3T Small Business LV TOU": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 567.11,
+                  "S": 241.82,
+                  "O": 117.39
+                },
+                "LD": {
+                  "P": 328.45,
+                  "S": 209.01,
+                  "O": 108.3
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 1272.73,
               "capacity_r_kva_month": 0,
               "demand_r_kva_month": 0
             },
-            "Newcastle Scale 4T Medium Business TOU Demand": {
+            "Newcastle Scale 4S Medium Business LV": {
               "type": "municipal_flat",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 227.05,
-                  "S": 227.05,
-                  "O": 227.05
+                  "P": 161.35,
+                  "S": 161.35,
+                  "O": 161.35
                 },
                 "LD": {
-                  "P": 227.05,
-                  "S": 227.05,
-                  "O": 227.05
+                  "P": 161.35,
+                  "S": 161.35,
+                  "O": 161.35
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 0,
-              "capacity_r_kva_month": 2511.53,
-              "demand_r_kva_month": 1164.66
+              "service_r_month": 2737.57,
+              "capacity_r_kva_month": 247.47,
+              "demand_r_kva_month": 285.34,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1269.59,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
+            },
+            "Newcastle Scale 4T Medium Business TOU Demand": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 635.61,
+                  "S": 322.35,
+                  "O": 181.81
+                },
+                "LD": {
+                  "P": 537.75,
+                  "S": 241.89,
+                  "O": 150.56
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 2737.57,
+              "capacity_r_kva_month": 67.01,
+              "demand_r_kva_month": 89.62
+            },
+            "Newcastle Scale 5S Large Business MV": {
+              "type": "municipal_flat",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 161.35,
+                  "S": 161.35,
+                  "O": 161.35
+                },
+                "LD": {
+                  "P": 161.35,
+                  "S": 161.35,
+                  "O": 161.35
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 5376.89,
+              "capacity_r_kva_month": 229.96,
+              "demand_r_kva_month": 259.33,
+              "other_charges": [
+                {
+                  "label": "Basic charge, vacant stand",
+                  "value": 1269.59,
+                  "unit": "R/month",
+                  "note": "Charged on a vacant stand with no supply; not used in calculations"
+                }
+              ]
             },
             "Newcastle Scale 5T Large Business MV TOU": {
-              "type": "municipal_flat",
+              "type": "municipal_tou",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 81.71,
-                  "S": 81.71,
-                  "O": 81.71
+                  "P": 557.32,
+                  "S": 237.55,
+                  "O": 115.43
                 },
                 "LD": {
-                  "P": 81.71,
-                  "S": 81.71,
-                  "O": 81.71
+                  "P": 322.74,
+                  "S": 205.38,
+                  "O": 106.57
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 0,
-              "capacity_r_kva_month": 210.97,
-              "demand_r_kva_month": 237.92
+              "service_r_month": 5376.89,
+              "capacity_r_kva_month": 67.59,
+              "demand_r_kva_month": 89.06
             }
           }
         }
