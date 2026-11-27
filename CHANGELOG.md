@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.33.0] - 2026-11-27
+
+### Added
+- tariffs: eThekwini Industrial TOU voltage surcharge, both rate years (2025/26 and 2026/27). Table: 275 kV 0%, 132 kV 2.25%, 33 kV 3%, 11 kV 10.5%, 6.6 kV 12.75%, 400 V 22.5%, levied on all charges except the service charge. Sources: eThekwini tariff-rates-2026-2027.pdf p11 (ITOU) and the final 2026/2027 tariff tables p228 (same table in the 2025/26 and 2026/27 columns). Stored as `voltage_surcharge_pct` + `default_voltage` ("400V"). Built by `scripts/add_ethekwini_voltage_surcharge.py`.
+- engine: municipal tariffs with `voltage_surcharge_pct` now use the `voltage` argument of `get_tariff_rates` / `get_tariff_rates_for_date`. The surcharge is built into the import energy, demand and capacity (network access) rates. Service charge and export credits are not surcharged.
+- engine: `TariffRates.supply_voltage` (voltage key applied; Eskom reports its rate column, other tariffs `None`) and `TariffRates.voltage_surcharge_pct`.
+- engine: `list_supply_voltages(tariff_name)` returns the valid `voltage` keys (Eskom rate columns, surcharge table keys, or `[]`).
+- tariffs: new `eThekwini Commercial TOU` (CTOU, NMD 100 kVA and below), both years. 2025/26 from the final tables p228 "Current Commercial TOU": HD 642.15 / 321.30 / 156.52, LD 316.82 / 254.87 / 148.26 c/kWh, demand R137.04/kVA, service R680.02/month. 2026/27 from tariff-rates-2026-2027.pdf p10: HD 699.94 / 350.22 / 170.61, LD 345.33 / 277.82 / 161.60 c/kWh, demand R149.37/kVA, service R741.22/month.
+- tests: `TestEThekwiniVoltageSurcharge`, `TestEThekwini2026Final`.
+
+### Fixed
+- tariffs: eThekwini 2026/27 (effective 2026-07-01) moved from the June draft tables (+10.5%) to the final schedule (about +9%). Built by `scripts/fix_ethekwini_2026_final.py`. Changes date-based results from 1 July 2026.
+  - `eThekwini Industrial TOU`: energy HD 681.66 / 191.04 / 136.52 -> 667.89 / 187.31 / 133.91, LD 298.97 / 180.14 / 136.52 -> 293.04 / 176.64 / 133.91 c/kWh; network demand R170.56 -> R176.51/kVA; network access R58.57 -> R60.81/kVA; service R7 941.12 -> R8 079.99/month (p11). Export null -> Industrial Net Billing feed-in rates HD 640.77 / 160.19 / 106.79, LD 265.92 / 149.52 / 106.79 c/kWh (p14), as 2025/26 already had.
+  - `eThekwini Business Scale 1`: **was holding the draft CTOU rates** (TOU 709.58 c/kWh peak, R151.43/kVA demand, R751.43/month). Now the flat Scale 1 tariff, 403.65 c/kWh, R528.16/month, no demand charge (p1), consistent with 2025/26. The CTOU rates are now under `eThekwini Commercial TOU`.
+
+### Changed
+- **eThekwini Industrial TOU results change for every caller.** Without `voltage`, it now resolves at 400V, so energy, demand and capacity rates are 22.5% above the base rates. MV/HV sites must pass their voltage (e.g. `voltage="11kV"`, +10.5%). See README "Municipal voltage surcharge".
+- Saved designs or dashboard sites on `eThekwini Business Scale 1` that meant CTOU must move to `eThekwini Commercial TOU`.
+
+### Notes
+- **Industrial Net Billing ancillary network charge is not priced.** It is R/kVA/month on inverter size (400V R52.11, 6.6kV R30.47, 11kV R24.53, 33kV R6.94, 132kV R5.32) and is listed in ITOU 2026/27 `other_charges` for display only. At 400V it is about R625/kVA/year, so it can outweigh export credits. Consumers that price export on eThekwini ITOU must add it.
+- Not modelled: the Business Scale 1/2 voltage rebate (2% off energy above 1 000 V), the CTOU 25% network surcharge (network demand at or above 110 kVA), the CTOU 50 kVA minimum demand charge. The 2025/26 ITOU keeps network access inside the demand charge (R207.35 = 154.35 + 53.00).
+- The schedule still reads "subject to the approval of NERSA".
+- All other providers unchanged from 1.32.0.
+
 ## [1.32.0] - 2026-11-15
 
 ### Added

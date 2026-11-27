@@ -836,3 +836,135 @@ class TestServiceChargeByNmd:
         scaled = get_tariff_rates("CoCT LV TOU", nmd_kva=5000)
         assert math.isclose(flat.service_charge_pa, scaled.service_charge_pa, rel_tol=1e-9)
         assert scaled.admin_charge_pa == 0.0
+
+
+# ============================================================================
+# Section 5 - eThekwini Industrial TOU voltage surcharge
+# ============================================================================
+
+class TestEThekwiniVoltageSurcharge:
+    """ITOU voltage surcharge: a % on all charges except the service charge.
+    Source: eThekwini tariff-rates-2026-2027.pdf p11, final tariff tables p228."""
+
+    NAME = "eThekwini Industrial TOU"
+    PDF_TABLE = {"400V": 22.5, "6.6kV": 12.75, "11kV": 10.5,
+                 "33kV": 3.0, "132kV": 2.25, "275kV": 0.0}
+
+    @staticmethod
+    def _raw(effective):
+        from tariff_engine.rates import _get_raw_tariff_data
+        prov = _get_raw_tariff_data()["providers"]["eThekwini"]
+        ver = next(v for v in prov["versions"] if v["effective"] == effective)
+        return ver["tariffs"]["eThekwini Industrial TOU"]
+
+    @staticmethod
+    def _import(t):
+        return (t.hd_peak, t.hd_standard, t.hd_off_peak, t.ld_peak, t.ld_standard, t.ld_off_peak)
+
+    @pytest.mark.parametrize("effective", ["2025-07-01", "2026-07-01"])
+    def test_table_matches_pdf_both_years(self, effective):
+        raw = self._raw(effective)
+        assert raw["voltage_surcharge_pct"] == self.PDF_TABLE
+        assert raw["default_voltage"] == "400V"
+
+    @pytest.mark.parametrize("voltage", list(PDF_TABLE))
+    def test_charges_scaled_service_not(self, voltage):
+        raw = self._raw("2026-07-01")
+        m = 1 + self.PDF_TABLE[voltage] / 100
+        t = get_tariff_rates(self.NAME, voltage=voltage)
+        e = raw["energy_c_per_kwh"]
+        expected = [e[s][p] * m / 100 for s in ("HD", "LD") for p in ("P", "S", "O")]
+        assert all(math.isclose(a, b, rel_tol=1e-9) for a, b in zip(self._import(t), expected))
+        assert math.isclose(t.demand_charge_kva, raw["demand_r_kva_month"] * m, rel_tol=1e-9)
+        assert math.isclose(t.capacity_charge_kva, raw["capacity_r_kva_month"] * m, rel_tol=1e-9)
+        assert math.isclose(t.network_capacity_charge_kva, t.capacity_charge_kva, rel_tol=1e-9)
+        assert math.isclose(t.service_charge_pa, raw["service_r_month"] * 12, rel_tol=1e-9)
+        assert (t.supply_voltage, t.voltage_surcharge_pct) == (voltage, self.PDF_TABLE[voltage])
+
+    def test_275kv_is_unsurcharged(self):
+        raw = self._raw("2026-07-01")["energy_c_per_kwh"]
+        t = get_tariff_rates(self.NAME, voltage="275kV")
+        assert math.isclose(t.hd_peak, raw["HD"]["P"] / 100, rel_tol=1e-12)
+
+    @pytest.mark.parametrize("voltage", [None, "<500V", "11 kV"])
+    def test_missing_or_unknown_voltage_uses_400v(self, voltage):
+        t = get_tariff_rates(self.NAME, voltage=voltage)
+        lv = get_tariff_rates(self.NAME, voltage="400V")
+        assert (t.supply_voltage, t.voltage_surcharge_pct) == ("400V", 22.5)
+        assert self._import(t) == self._import(lv)
+
+    def test_2025_by_date_and_export_not_surcharged(self):
+        import datetime as _dt
+        from tariff_engine import get_tariff_rates_for_date
+        raw = self._raw("2025-07-01")
+        t = get_tariff_rates_for_date(self.NAME, _dt.date(2025, 8, 1), voltage="11kV")
+        assert math.isclose(t.hd_peak, raw["energy_c_per_kwh"]["HD"]["P"] * 1.105 / 100, rel_tol=1e-9)
+        assert math.isclose(t.demand_charge_kva, raw["demand_r_kva_month"] * 1.105, rel_tol=1e-9)
+        # Export (net billing) credit is not a cost: no surcharge.
+        assert math.isclose(t.export_hd_peak, raw["export_c_per_kwh"]["HD"]["P"] / 100, rel_tol=1e-12)
+
+    def test_other_tariffs_unaffected(self):
+        biz = get_tariff_rates("eThekwini Business Scale 1", voltage="400V")
+        assert (biz.supply_voltage, biz.voltage_surcharge_pct) == (None, 0.0)
+        assert biz.hd_peak == get_tariff_rates("eThekwini Business Scale 1").hd_peak
+        mini = get_tariff_rates("Eskom Miniflex")
+        assert (mini.supply_voltage, mini.voltage_surcharge_pct) == ("<500V", 0.0)
+
+    def test_list_supply_voltages(self):
+        from tariff_engine import list_supply_voltages
+        assert list_supply_voltages(self.NAME) == list(self.PDF_TABLE)
+        assert list_supply_voltages("Eskom Miniflex")[0] == "<500V"
+        assert list_supply_voltages("eThekwini Business Scale 1") == []
+        with pytest.raises(KeyError):
+            list_supply_voltages("No Such Tariff")
+
+
+class TestEThekwini2026Final:
+    """2026/27 on the final schedule (tariff-rates-2026-2027.pdf pp1, 10, 11, 14;
+    final tariff tables p228). Checked at 275kV so the ITOU surcharge is 0%."""
+
+    @staticmethod
+    def _cells(t):
+        return [round(x * 100, 2) for x in
+                (t.hd_peak, t.hd_standard, t.hd_off_peak, t.ld_peak, t.ld_standard, t.ld_off_peak)]
+
+    def test_itou_2026(self):
+        t = get_tariff_rates("eThekwini Industrial TOU", voltage="275kV")
+        assert self._cells(t) == [667.89, 187.31, 133.91, 293.04, 176.64, 133.91]
+        assert (t.demand_charge_kva, t.capacity_charge_kva) == (176.51, 60.81)
+        assert math.isclose(t.service_charge_pa, 8079.99 * 12, rel_tol=1e-9)
+
+    def test_itou_2026_net_billing_export_not_surcharged(self):
+        for v in ("275kV", "400V"):
+            t = get_tariff_rates("eThekwini Industrial TOU", voltage=v)
+            exp = [round(x * 100, 2) for x in (t.export_hd_peak, t.export_hd_standard, t.export_hd_off_peak,
+                                               t.export_ld_peak, t.export_ld_standard, t.export_ld_off_peak)]
+            assert exp == [640.77, 160.19, 106.79, 265.92, 149.52, 106.79]
+
+    def test_scale1_2026_is_flat(self):
+        t = get_tariff_rates("eThekwini Business Scale 1")
+        assert self._cells(t) == [403.65] * 6
+        assert (t.demand_charge_kva, t.capacity_charge_kva) == (0, 0)
+        assert math.isclose(t.service_charge_pa, 528.16 * 12, rel_tol=1e-9)
+
+    @pytest.mark.parametrize("date, cells, service, demand", [
+        ((2025, 8, 1), [642.15, 321.30, 156.52, 316.82, 254.87, 148.26], 680.02, 137.04),
+        ((2026, 8, 1), [699.94, 350.22, 170.61, 345.33, 277.82, 161.60], 741.22, 149.37),
+    ])
+    def test_commercial_tou_both_years(self, date, cells, service, demand):
+        import datetime as _dt
+        from tariff_engine import get_tariff_rates_for_date
+        t = get_tariff_rates_for_date("eThekwini Commercial TOU", _dt.date(*date))
+        assert self._cells(t) == cells
+        assert t.demand_charge_kva == demand
+        assert math.isclose(t.service_charge_pa, service * 12, rel_tol=1e-9)
+        assert (t.supply_voltage, t.voltage_surcharge_pct) == (None, 0.0)
+
+    def test_2025_scale1_and_itou_unchanged(self):
+        import datetime as _dt
+        from tariff_engine import get_tariff_rates_for_date
+        s1 = get_tariff_rates_for_date("eThekwini Business Scale 1", _dt.date(2025, 8, 1))
+        assert self._cells(s1) == [370.32] * 6
+        it = get_tariff_rates_for_date("eThekwini Industrial TOU", _dt.date(2025, 8, 1), voltage="275kV")
+        assert self._cells(it) == [616.88, 172.88, 123.54, 270.56, 163.02, 123.54]
+        assert it.demand_charge_kva == 207.35

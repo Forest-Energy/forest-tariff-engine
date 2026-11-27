@@ -4507,6 +4507,25 @@
               "capacity_r_kva_month": 0,
               "demand_r_kva_month": 0
             },
+            "eThekwini Commercial TOU": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 642.15,
+                  "S": 321.3,
+                  "O": 156.52
+                },
+                "LD": {
+                  "P": 316.82,
+                  "S": 254.87,
+                  "O": 148.26
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 680.02,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 137.04
+            },
             "eThekwini Industrial TOU": {
               "type": "municipal_tou",
               "energy_c_per_kwh": {
@@ -4535,7 +4554,16 @@
               },
               "service_r_month": 7186.53,
               "capacity_r_kva_month": 0,
-              "demand_r_kva_month": 207.35
+              "demand_r_kva_month": 207.35,
+              "voltage_surcharge_pct": {
+                "400V": 22.5,
+                "6.6kV": 12.75,
+                "11kV": 10.5,
+                "33kV": 3.0,
+                "132kV": 2.25,
+                "275kV": 0.0
+              },
+              "default_voltage": "400V"
             }
           }
         },
@@ -4543,42 +4571,113 @@
           "effective": "2026-07-01",
           "tariffs": {
             "eThekwini Business Scale 1": {
-              "type": "municipal_tou",
+              "type": "municipal_flat",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 709.58,
-                  "S": 355.04,
-                  "O": 172.96
+                  "P": 403.65,
+                  "S": 403.65,
+                  "O": 403.65
                 },
                 "LD": {
-                  "P": 350.09,
-                  "S": 281.64,
-                  "O": 163.83
+                  "P": 403.65,
+                  "S": 403.65,
+                  "O": 403.65
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 751.43,
+              "service_r_month": 528.16,
               "capacity_r_kva_month": 0,
-              "demand_r_kva_month": 151.43
+              "demand_r_kva_month": 0
+            },
+            "eThekwini Commercial TOU": {
+              "type": "municipal_tou",
+              "energy_c_per_kwh": {
+                "HD": {
+                  "P": 699.94,
+                  "S": 350.22,
+                  "O": 170.61
+                },
+                "LD": {
+                  "P": 345.33,
+                  "S": 277.82,
+                  "O": 161.6
+                }
+              },
+              "export_c_per_kwh": null,
+              "service_r_month": 741.22,
+              "capacity_r_kva_month": 0,
+              "demand_r_kva_month": 149.37
             },
             "eThekwini Industrial TOU": {
               "type": "municipal_tou",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 681.66,
-                  "S": 191.04,
-                  "O": 136.52
+                  "P": 667.89,
+                  "S": 187.31,
+                  "O": 133.91
                 },
                 "LD": {
-                  "P": 298.97,
-                  "S": 180.14,
-                  "O": 136.52
+                  "P": 293.04,
+                  "S": 176.64,
+                  "O": 133.91
                 }
               },
-              "export_c_per_kwh": null,
-              "service_r_month": 7941.12,
-              "capacity_r_kva_month": 58.57,
-              "demand_r_kva_month": 170.56
+              "export_c_per_kwh": {
+                "HD": {
+                  "P": 640.77,
+                  "S": 160.19,
+                  "O": 106.79
+                },
+                "LD": {
+                  "P": 265.92,
+                  "S": 149.52,
+                  "O": 106.79
+                }
+              },
+              "service_r_month": 8079.99,
+              "capacity_r_kva_month": 60.81,
+              "demand_r_kva_month": 176.51,
+              "voltage_surcharge_pct": {
+                "400V": 22.5,
+                "6.6kV": 12.75,
+                "11kV": 10.5,
+                "33kV": 3.0,
+                "132kV": 2.25,
+                "275kV": 0.0
+              },
+              "default_voltage": "400V",
+              "other_charges": [
+                {
+                  "label": "Net billing ancillary network charge, 400V",
+                  "value": 52.11,
+                  "unit": "R/kVA/month",
+                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
+                },
+                {
+                  "label": "Net billing ancillary network charge, 6.6kV",
+                  "value": 30.47,
+                  "unit": "R/kVA/month",
+                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
+                },
+                {
+                  "label": "Net billing ancillary network charge, 11kV",
+                  "value": 24.53,
+                  "unit": "R/kVA/month",
+                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
+                },
+                {
+                  "label": "Net billing ancillary network charge, 33kV",
+                  "value": 6.94,
+                  "unit": "R/kVA/month",
+                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
+                },
+                {
+                  "label": "Net billing ancillary network charge, 132kV",
+                  "value": 5.32,
+                  "unit": "R/kVA/month",
+                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
+                }
+              ]
             }
           }
         }

@@ -33,7 +33,8 @@ from tariff_engine import (
     list_tou_schedules,         # names of available TOU schedules
     calculate_hourly_savings,   # PV/BESS savings per hour
     list_tariffs,               # all available tariff display names
-    TariffRates,                # dataclass (carries .tou_schedule, .admin_charge_pa)
+    list_supply_voltages,       # valid voltage= keys for a tariff
+    TariffRates,                # dataclass (carries .tou_schedule, .admin_charge_pa, .supply_voltage)
 )
 ```
 
@@ -105,6 +106,36 @@ t.admin_charge_pa     # R7,690.55   (admin charge for that band; was previously 
 **Municipalities are unaffected.** They have no NMD service brackets; `nmd_kva`
 is ignored for non-Eskom tariffs, `service_charge_pa` stays flat, and
 `admin_charge_pa` is 0.
+
+## Municipal voltage surcharge (eThekwini ITOU, added v1.33.0)
+
+eThekwini Industrial TOU levies a voltage surcharge on **all charges except the
+service charge** (275 kV 0%, 132 kV 2.25%, 33 kV 3%, 11 kV 10.5%, 6.6 kV 12.75%,
+400 V 22.5%). The engine stores it per tariff (`voltage_surcharge_pct` +
+`default_voltage` in `tariff_data.json`) and **builds it into the rates** it
+returns, selected by the existing `voltage` argument:
+
+```python
+t = get_tariff_rates("eThekwini Industrial TOU", voltage="11kV")
+t.hd_peak, t.demand_charge_kva, t.capacity_charge_kva  # all x 1.105
+t.service_charge_pa                                    # not surcharged
+t.supply_voltage, t.voltage_surcharge_pct              # "11kV", 10.5 (display/audit)
+list_supply_voltages("eThekwini Industrial TOU")       # ["400V", "6.6kV", ..., "275kV"]
+```
+
+- Import energy, demand and capacity (network access) rates are surcharged.
+  Export credits and the service charge are not.
+- `voltage=None` or an unknown key uses `default_voltage` (**400V, +22.5%**).
+  Check `t.supply_voltage` to see what was applied.
+- Tariffs without a surcharge ignore `voltage`; `supply_voltage` is `None` for
+  them (Eskom reports its rate column) and `voltage_surcharge_pct` is 0.
+
+**What each consumer must do:**
+
+| Consumer | Required change |
+|----------|-----------------|
+| Solar Model | Pass the site's supply voltage: `get_tariff_rates(name, voltage=...)`. Populate the voltage dropdown from `list_supply_voltages(name)`. Without it, eThekwini ITOU is priced at 400V. |
+| Solar Dashboard | Pass `voltage` to `get_tariff_rates_for_date(...)` for MV/HV eThekwini ITOU sites. Without it, they are priced at 400V. |
 
 ## Local development
 
