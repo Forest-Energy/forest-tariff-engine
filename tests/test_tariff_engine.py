@@ -968,3 +968,35 @@ class TestEThekwini2026Final:
         it = get_tariff_rates_for_date("eThekwini Industrial TOU", _dt.date(2025, 8, 1), voltage="275kV")
         assert self._cells(it) == [616.88, 172.88, 123.54, 270.56, 163.02, 123.54]
         assert it.demand_charge_kva == 207.35
+
+
+class TestEThekwiniNetBillingCharge:
+    """Industrial Net Billing ancillary network charge, R/kVA/month of inverter
+    size by supply voltage (final tariff tables p228). Not surcharged."""
+
+    NAME = "eThekwini Industrial TOU"
+
+    @pytest.mark.parametrize("voltage, rate", [
+        ("400V", 52.11), ("6.6kV", 30.47), ("11kV", 24.86), ("33kV", 7.03), ("132kV", 5.39), ("275kV", 0.0),
+    ])
+    def test_2026_by_voltage(self, voltage, rate):
+        t = get_tariff_rates(self.NAME, voltage=voltage)
+        assert t.export_network_charge_kva == rate
+        assert t.supply_voltage == voltage
+
+    def test_default_is_400v(self):
+        assert get_tariff_rates(self.NAME).export_network_charge_kva == 52.11
+        assert get_tariff_rates(self.NAME, voltage="<500V").export_network_charge_kva == 52.11
+
+    def test_2025_by_date(self):
+        import datetime as _dt
+        from tariff_engine import get_tariff_rates_for_date
+        t = get_tariff_rates_for_date(self.NAME, _dt.date(2025, 8, 1), voltage="11kV")
+        assert t.export_network_charge_kva == 22.50
+
+    def test_other_tariffs_zero_and_no_display_duplicate(self):
+        from tariff_engine.rates import _get_raw_tariff_data
+        assert get_tariff_rates("eThekwini Business Scale 1").export_network_charge_kva == 0.0
+        assert get_tariff_rates("Eskom Miniflex").export_network_charge_kva == 0.0
+        for v in _get_raw_tariff_data()["providers"]["eThekwini"]["versions"]:
+            assert "other_charges" not in v["tariffs"][self.NAME]

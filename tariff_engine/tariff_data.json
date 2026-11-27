@@ -4563,7 +4563,14 @@
                 "132kV": 2.25,
                 "275kV": 0.0
               },
-              "default_voltage": "400V"
+              "default_voltage": "400V",
+              "export_network_charge_r_kva_month": {
+                "400V": 47.8,
+                "6.6kV": 27.95,
+                "11kV": 22.5,
+                "33kV": 6.37,
+                "132kV": 4.88
+              }
             }
           }
         },
@@ -4646,38 +4653,13 @@
                 "275kV": 0.0
               },
               "default_voltage": "400V",
-              "other_charges": [
-                {
-                  "label": "Net billing ancillary network charge, 400V",
-                  "value": 52.11,
-                  "unit": "R/kVA/month",
-                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
-                },
-                {
-                  "label": "Net billing ancillary network charge, 6.6kV",
-                  "value": 30.47,
-                  "unit": "R/kVA/month",
-                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
-                },
-                {
-                  "label": "Net billing ancillary network charge, 11kV",
-                  "value": 24.86,
-                  "unit": "R/kVA/month",
-                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
-                },
-                {
-                  "label": "Net billing ancillary network charge, 33kV",
-                  "value": 7.03,
-                  "unit": "R/kVA/month",
-                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
-                },
-                {
-                  "label": "Net billing ancillary network charge, 132kV",
-                  "value": 5.39,
-                  "unit": "R/kVA/month",
-                  "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
-                }
-              ]
+              "export_network_charge_r_kva_month": {
+                "400V": 52.11,
+                "6.6kV": 30.47,
+                "11kV": 24.86,
+                "33kV": 7.03,
+                "132kV": 5.39
+              }
             }
           }
         }
