@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.33.1] - 2026-11-27
+
+### Fixed
+- tariffs: eThekwini 2026/27 (effective 2026-07-01) now follows the final 2026/2027 tariff tables (`eth-final-2026-2027-tariff-tables.pdf`) where they differ from the tariff sheet `tariff-rates-2026-2027.pdf` used in 1.33.0. Built by `scripts/fix_ethekwini_2026_final.py` (updated). Changes date-based results from 1 July 2026.
+  - `eThekwini Business Scale 1`: flat 403.65 c/kWh -> high season (Jun-Aug) 415.47, low season 400.89 c/kWh, no TOU (p224). Service unchanged at R528.16/month. About 0.2% higher over a year, about 3% higher in June to August.
+  - `eThekwini Commercial TOU`: HD 699.94 -> 699.95, LD 345.33 / 277.82 / 161.60 -> 345.34 / 277.81 / 161.61 c/kWh; demand R149.37 -> R149.38/kVA; service R741.22 -> R741.23/month (p226). Rounding only.
+  - `eThekwini Industrial TOU` `other_charges` (display only): Net Billing ancillary network charge 132kV 5.32 -> 5.39, 33kV 6.94 -> 7.03, 11kV 24.53 -> 24.86 R/kVA/month (p228). 6.6kV and 400V unchanged.
+
+### Notes
+- Industrial TOU rates, the voltage surcharge, Net Billing feed-in and all 2025/26 values already matched the final tables and are unchanged.
+- The tariff sheet shows Scale 1 as flat 403.65 with seasonal pricing "TBA". If a Scale 1 bill for June to August 2026 consumption is billed at 403.65, revert Scale 1 to flat.
+- All other providers unchanged from 1.33.0.
+
 ## [1.33.0] - 2026-11-27
 
 ### Added

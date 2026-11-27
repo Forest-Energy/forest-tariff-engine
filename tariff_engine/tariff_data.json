@@ -4574,14 +4574,14 @@
               "type": "municipal_flat",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 403.65,
-                  "S": 403.65,
-                  "O": 403.65
+                  "P": 415.47,
+                  "S": 415.47,
+                  "O": 415.47
                 },
                 "LD": {
-                  "P": 403.65,
-                  "S": 403.65,
-                  "O": 403.65
+                  "P": 400.89,
+                  "S": 400.89,
+                  "O": 400.89
                 }
               },
               "export_c_per_kwh": null,
@@ -4593,20 +4593,20 @@
               "type": "municipal_tou",
               "energy_c_per_kwh": {
                 "HD": {
-                  "P": 699.94,
+                  "P": 699.95,
                   "S": 350.22,
                   "O": 170.61
                 },
                 "LD": {
-                  "P": 345.33,
-                  "S": 277.82,
-                  "O": 161.6
+                  "P": 345.34,
+                  "S": 277.81,
+                  "O": 161.61
                 }
               },
               "export_c_per_kwh": null,
-              "service_r_month": 741.22,
+              "service_r_month": 741.23,
               "capacity_r_kva_month": 0,
-              "demand_r_kva_month": 149.37
+              "demand_r_kva_month": 149.38
             },
             "eThekwini Industrial TOU": {
               "type": "municipal_tou",
@@ -4661,19 +4661,19 @@
                 },
                 {
                   "label": "Net billing ancillary network charge, 11kV",
-                  "value": 24.53,
+                  "value": 24.86,
                   "unit": "R/kVA/month",
                   "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
                 },
                 {
                   "label": "Net billing ancillary network charge, 33kV",
-                  "value": 6.94,
+                  "value": 7.03,
                   "unit": "R/kVA/month",
                   "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
                 },
                 {
                   "label": "Net billing ancillary network charge, 132kV",
-                  "value": 5.32,
+                  "value": 5.39,
                   "unit": "R/kVA/month",
                   "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations"
                 }
