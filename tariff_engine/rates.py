@@ -8,6 +8,7 @@ Public API
     TariffRates                          dataclass
     get_tariff_rates(name, ...)       -> TariffRates   (latest version)
     list_tariffs()                    -> list[str]
+    list_supply_voltages(name)        -> list[str]     (valid voltage= keys)
     _load_tariff_json(name)           -> dict          (latest, cached)
     _load_tariff_json_for_date(name, date) -> dict     (historical, uncached)
     _get_raw_tariff_data()            -> dict          (raw JSON)
@@ -219,6 +220,8 @@ def _resolve_from_flat_td(name: str, td: dict) -> dict:
                 "demand_charge_kva": t.get("demand_r_kva_month", 0.0) or 0.0,
                 "sseg_options": t.get("sseg_options"),
                 "tou_schedule": t.get("tou_schedule", "eskom"),
+                "voltage_surcharge_pct": t.get("voltage_surcharge_pct"),
+                "default_voltage": t.get("default_voltage"),
             }
 
     # Not found
@@ -272,6 +275,11 @@ class TariffRates:
     network_capacity_charge_kva: float = 0.0      # R/kVA/month (NMD) - network component
     demand_charge_kva: float = 0.0     # R/kVA/month (actual max demand)
     tou_schedule: str = "eskom"        # name of the TOU schedule (see tou.py)
+    # Municipal voltage surcharge (e.g. eThekwini ITOU). Already included in the
+    # import energy, demand and capacity rates above; the service charge and
+    # export rates are not surcharged. Shown here for display/audit only.
+    supply_voltage: Optional[str] = None   # voltage key applied (Eskom or surcharge table; None = not voltage-dependent)
+    voltage_surcharge_pct: float = 0.0     # municipal voltage surcharge % applied (0 for Eskom and other tariffs)
 
     def rate(self, season: str, tou_period: int) -> float:
         """Return the import rate (R/kWh) for a given season and TOU period."""
@@ -340,6 +348,24 @@ def _resolve_tariff_rates(
         gen_cap = 0.0
         net_cap = cap
 
+    # Municipal voltage surcharge (eThekwini ITOU): a % levied on all charges
+    # except the service charge, so it scales the import energy, demand and
+    # capacity (network access) rates. Export credits are not a cost and are
+    # not surcharged. An unknown/absent voltage falls back to default_voltage,
+    # as Eskom voltages do.
+    demand = data.get("demand_charge_kva", 0.0)
+    supply_voltage: Optional[str] = v if data["type"] == "eskom" else None
+    surcharge_pct = 0.0
+    surcharges = data.get("voltage_surcharge_pct")
+    if surcharges:
+        supply_voltage = voltage if voltage in surcharges else data["default_voltage"]
+        surcharge_pct = surcharges[supply_voltage]
+        m = 1.0 + surcharge_pct / 100.0
+        imp = {s: {p: imp[s][p] * m for p in ("P", "S", "O")} for s in ("HD", "LD")}
+        cap *= m
+        net_cap *= m
+        demand *= m
+
     # CoCT SSEG export override
     if sseg_option and "sseg_options" in data:
         sseg = data["sseg_options"].get(sseg_option)
@@ -386,8 +412,10 @@ def _resolve_tariff_rates(
         capacity_charge_kva = cap,
         generation_capacity_charge_kva = gen_cap,
         network_capacity_charge_kva    = net_cap,
-        demand_charge_kva   = data.get("demand_charge_kva", 0.0),
+        demand_charge_kva   = demand,
         tou_schedule        = data.get("tou_schedule", "eskom"),
+        supply_voltage      = supply_voltage,
+        voltage_surcharge_pct = surcharge_pct,
     )
 
 
@@ -409,7 +437,12 @@ def get_tariff_rates(
     zone : str, optional
         Eskom transmission zone (e.g. ">900km"). Defaults to JSON default_zone.
     voltage : str, optional
-        Eskom supply voltage (e.g. "<500V"). Defaults to JSON default_voltage.
+        Supply voltage key. Eskom: selects the rate column (e.g. "<500V").
+        Municipal tariffs with a voltage surcharge (eThekwini Industrial TOU):
+        selects the surcharge % (e.g. "400V", "11kV"), which is built into the
+        import energy, demand and capacity rates. Unknown or None falls back to
+        the tariff's default_voltage. Ignored by other tariffs. Valid keys:
+        list_supply_voltages(tariff_name).
     sseg_option : str, optional
         CoCT SSEG export option key (e.g. "SSEG Tariff 1", "SSEG TOU").
     nmd_kva : float, optional
@@ -426,6 +459,21 @@ def get_tariff_rates(
     data = _load_tariff_json(tariff_name)
     return _resolve_tariff_rates(tariff_name, data, zone, voltage, sseg_option,
                                  nmd_kva, key_customer)
+
+
+def list_supply_voltages(tariff_name: str) -> list[str]:
+    """
+    Return the supply voltage keys a tariff accepts via ``voltage=`` (latest
+    version), for populating a voltage dropdown. Eskom: the rate-column keys.
+    Municipal tariffs with a voltage surcharge: the surcharge table keys.
+    Empty list when the tariff does not depend on voltage.
+
+    Raises KeyError if the tariff name is not found.
+    """
+    data = _load_tariff_json(tariff_name)
+    if data["type"] == "eskom":
+        return list(data["voltages"])
+    return list(data.get("voltage_surcharge_pct") or {})
 
 
 def list_tariffs() -> list[str]:

@@ -67,7 +67,9 @@ def get_tariff_rates_for_date(
     zone : str, optional
         Eskom transmission zone. Defaults to JSON default_zone.
     voltage : str, optional
-        Eskom supply voltage. Defaults to JSON default_voltage.
+        Supply voltage key. Eskom: rate column. eThekwini Industrial TOU:
+        voltage surcharge (built into the rates). Defaults to JSON
+        default_voltage. See get_tariff_rates().
     sseg_option : str, optional
         CoCT SSEG export option key.
 

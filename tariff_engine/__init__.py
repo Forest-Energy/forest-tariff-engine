@@ -26,6 +26,7 @@ from tariff_engine.rates import (
     TariffRates,
     get_tariff_rates,
     list_tariffs,
+    list_supply_voltages,
     _load_tariff_json,
     _get_raw_tariff_data,
     _resolve_tariff_rates,
@@ -46,6 +47,7 @@ __all__ = [
     "TariffRates",
     "get_tariff_rates",
     "list_tariffs",
+    "list_supply_voltages",
     # Dashboard extras
     "get_tariff_rates_for_date",
     "calculate_hourly_savings",
