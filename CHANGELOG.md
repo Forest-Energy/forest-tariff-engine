@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.34.0] - 2026-11-27
+
+### Added
+- tariffs: eThekwini Industrial TOU net billing network charge as structured data, both years: `export_network_charge_r_kva_month` by supply voltage. eThekwini calls it the Industrial Net Billing "ancillary network charge": R/kVA/month on the installed inverter/generator size, payable when the customer exports. Source: final 2026/2027 tariff tables p228. 2025/26: 400V 47.80, 6.6kV 27.95, 11kV 22.50, 33kV 6.37, 132kV 4.88. 2026/27: 400V 52.11, 6.6kV 30.47, 11kV 24.86, 33kV 7.03, 132kV 5.39. No 275kV value is published (resolves to 0). Built by `scripts/add_ethekwini_net_billing_charge.py`.
+- engine: `TariffRates.export_network_charge_kva` (R/kVA/month for the supply voltage; 0 for other tariffs). Selected by the same `voltage` as the voltage surcharge (default 400V). Not surcharged. The engine does not know the inverter size: consumers multiply by inverter kVA x 12 when export is on.
+- tests: `TestEThekwiniNetBillingCharge`.
+
+### Changed
+- tariffs: the display-only `other_charges` entries for this charge on eThekwini Industrial TOU 2026/27 (added in 1.33.0) are removed; the structured field replaces them.
+
+### Notes
+- To confirm with eThekwini: whether battery-inverter kVA counts towards the inverter size, and whether the ITOU voltage surcharge applies on top of this charge (assumed not).
+- All other providers unchanged from 1.33.1.
+
 ## [1.33.1] - 2026-11-27
 
 ### Fixed

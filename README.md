@@ -129,6 +129,11 @@ list_supply_voltages("eThekwini Industrial TOU")       # ["400V", "6.6kV", ..., 
   Check `t.supply_voltage` to see what was applied.
 - Tariffs without a surcharge ignore `voltage`; `supply_voltage` is `None` for
   them (Eskom reports its rate column) and `voltage_surcharge_pct` is 0.
+- **Net billing network charge (v1.34.0).** `t.export_network_charge_kva` is the
+  eThekwini Industrial Net Billing "ancillary network charge" for the same
+  voltage, in R/kVA/month of **installed inverter size**, payable only when the
+  site exports. It is not in any rate above: multiply by inverter kVA x 12 and
+  deduct it from export income. 0 for all other tariffs.
 
 **What each consumer must do:**
 

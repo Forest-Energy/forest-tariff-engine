@@ -222,6 +222,7 @@ def _resolve_from_flat_td(name: str, td: dict) -> dict:
                 "tou_schedule": t.get("tou_schedule", "eskom"),
                 "voltage_surcharge_pct": t.get("voltage_surcharge_pct"),
                 "default_voltage": t.get("default_voltage"),
+                "export_network_charge_r_kva_month": t.get("export_network_charge_r_kva_month"),
             }
 
     # Not found
@@ -280,6 +281,11 @@ class TariffRates:
     # export rates are not surcharged. Shown here for display/audit only.
     supply_voltage: Optional[str] = None   # voltage key applied (Eskom or surcharge table; None = not voltage-dependent)
     voltage_surcharge_pct: float = 0.0     # municipal voltage surcharge % applied (0 for Eskom and other tariffs)
+    # Net billing network charge (eThekwini Industrial Net Billing "ancillary
+    # network charge"): R/kVA/month on the installed inverter/generator size,
+    # payable only when the customer exports. For supply_voltage; not surcharged.
+    # The engine does not know the inverter size: consumers multiply by it.
+    export_network_charge_kva: float = 0.0
 
     def rate(self, season: str, tou_period: int) -> float:
         """Return the import rate (R/kWh) for a given season and TOU period."""
@@ -366,6 +372,16 @@ def _resolve_tariff_rates(
         net_cap *= m
         demand *= m
 
+    # Net billing network charge by supply voltage (R/kVA/month of inverter
+    # size). Same voltage as the surcharge; a voltage with no published value
+    # (eThekwini 275 kV) is 0.
+    export_network = 0.0
+    net_billing = data.get("export_network_charge_r_kva_month")
+    if net_billing:
+        if supply_voltage is None:
+            supply_voltage = voltage if voltage in net_billing else data.get("default_voltage")
+        export_network = float(net_billing.get(supply_voltage) or 0.0)
+
     # CoCT SSEG export override
     if sseg_option and "sseg_options" in data:
         sseg = data["sseg_options"].get(sseg_option)
@@ -416,6 +432,7 @@ def _resolve_tariff_rates(
         tou_schedule        = data.get("tou_schedule", "eskom"),
         supply_voltage      = supply_voltage,
         voltage_surcharge_pct = surcharge_pct,
+        export_network_charge_kva = export_network,
     )
 
 
