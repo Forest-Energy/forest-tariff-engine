@@ -920,8 +920,8 @@ class TestEThekwiniVoltageSurcharge:
 
 
 class TestEThekwini2026Final:
-    """2026/27 on the final schedule (tariff-rates-2026-2027.pdf pp1, 10, 11, 14;
-    final tariff tables p228). Checked at 275kV so the ITOU surcharge is 0%."""
+    """2026/27 on the final tariff tables (printed pp224-226, 228).
+    Checked at 275kV so the ITOU surcharge is 0%."""
 
     @staticmethod
     def _cells(t):
@@ -941,15 +941,15 @@ class TestEThekwini2026Final:
                                                t.export_ld_peak, t.export_ld_standard, t.export_ld_off_peak)]
             assert exp == [640.77, 160.19, 106.79, 265.92, 149.52, 106.79]
 
-    def test_scale1_2026_is_flat(self):
+    def test_scale1_2026_is_seasonal(self):
         t = get_tariff_rates("eThekwini Business Scale 1")
-        assert self._cells(t) == [403.65] * 6
+        assert self._cells(t) == [415.47] * 3 + [400.89] * 3
         assert (t.demand_charge_kva, t.capacity_charge_kva) == (0, 0)
         assert math.isclose(t.service_charge_pa, 528.16 * 12, rel_tol=1e-9)
 
     @pytest.mark.parametrize("date, cells, service, demand", [
         ((2025, 8, 1), [642.15, 321.30, 156.52, 316.82, 254.87, 148.26], 680.02, 137.04),
-        ((2026, 8, 1), [699.94, 350.22, 170.61, 345.33, 277.82, 161.60], 741.22, 149.37),
+        ((2026, 8, 1), [699.95, 350.22, 170.61, 345.34, 277.81, 161.61], 741.23, 149.38),
     ])
     def test_commercial_tou_both_years(self, date, cells, service, demand):
         import datetime as _dt

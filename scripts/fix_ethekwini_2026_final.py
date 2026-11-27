@@ -2,11 +2,12 @@
 Correct eThekwini 2026/27 to the final schedule and add Commercial TOU (CTOU).
 
 The 2026/27 version was loaded in June 2026 from the draft tables (+10.5%). The
-final schedule is about +9%. Sources (all ex VAT):
-  - eThekwini "tariff-rates-2026-2027.pdf": Business & General Scale 1 p1,
-    CTOU p10, ITOU p11, Industrial Net Billing p14.
-  - eThekwini final 2026/2027 tariff tables, Bulk Tariffs p228: ITOU present
-    (2025/26) and proposed (2026/27) columns, Current Commercial TOU (2025/26).
+final schedule is about +9%. Primary source (all ex VAT): eThekwini final
+2026/2027 tariff tables ("eth-final-2026-2027-tariff-tables.pdf"), printed
+pages 224 (Scale 1), 225 (ITOU present/proposed, Current Commercial TOU),
+226 (Proposed Commercial TOU) and 228 (Industrial Net Billing). Where it
+differs from "tariff-rates-2026-2027.pdf" (Scale 1 flat 403.65, CTOU 1-cent
+rounding, ancillary charge at 132/33/11 kV), the final tables are used.
 
 Changes:
   - eThekwini Industrial TOU 2026/27: energy, network demand, network access and
@@ -14,8 +15,9 @@ Changes:
     rates (as in 2025/26). Net Billing ancillary network charge (R/kVA of
     inverter size, by voltage) kept in other_charges for display only.
     voltage_surcharge_pct / default_voltage are left as they are.
-  - eThekwini Business Scale 1 2026/27: was holding the draft CTOU rates. Back
-    to the flat Scale 1 tariff (403.65 c/kWh, R528.16/month), as in 2025/26.
+  - eThekwini Business Scale 1 2026/27: was holding the draft CTOU rates. Now
+    the Scale 1 tariff: high season 415.47, low season 400.89 c/kWh (no TOU),
+    R528.16/month.
   - New tariff "eThekwini Commercial TOU" (CTOU, NMD 100 kVA and below), both
     years, so the CTOU rates stay available under their own name.
 """
@@ -49,12 +51,12 @@ ANCILLARY_2026 = [
         "unit": "R/kVA/month",
         "note": "On inverter/generator size, only if on Industrial Net Billing. Not used in calculations",
     }
-    for v, r in (("400V", 52.11), ("6.6kV", 30.47), ("11kV", 24.53), ("33kV", 6.94), ("132kV", 5.32))
+    for v, r in (("400V", 52.11), ("6.6kV", 30.47), ("11kV", 24.86), ("33kV", 7.03), ("132kV", 5.39))
 ]
 
 SCALE1_2026 = {
     "type": "municipal_flat",
-    "energy_c_per_kwh": tou(403.65, 403.65, 403.65, 403.65, 403.65, 403.65),
+    "energy_c_per_kwh": tou(415.47, 415.47, 415.47, 400.89, 400.89, 400.89),
     "export_c_per_kwh": None,
     "service_r_month": 528.16,
     "capacity_r_kva_month": 0,
@@ -72,11 +74,11 @@ CTOU_RATES = {
     },
     "2026-07-01": {
         "type": "municipal_tou",
-        "energy_c_per_kwh": tou(699.94, 350.22, 170.61, 345.33, 277.82, 161.60),
+        "energy_c_per_kwh": tou(699.95, 350.22, 170.61, 345.34, 277.81, 161.61),
         "export_c_per_kwh": None,
-        "service_r_month": 741.22,
+        "service_r_month": 741.23,
         "capacity_r_kva_month": 0,
-        "demand_r_kva_month": 149.37,
+        "demand_r_kva_month": 149.38,
     },
 }
 
